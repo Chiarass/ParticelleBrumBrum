@@ -1,4 +1,5 @@
 #include "ResonanceType.hpp"
+#include "ParticleType.hpp"
 
 ResonanceType::ResonanceType(const char* parName, const double parMass,
                              const int parCharge, const double resWidth)
