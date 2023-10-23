@@ -13,7 +13,7 @@ class ParticleType {
   const char* get_ParticleName();
   const double get_ParticleMass();
   const int get_ParticleCharge();
-  void print();
+  virtual void print();
 };
 
 #endif
