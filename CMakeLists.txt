@@ -23,7 +23,7 @@ add_executable(particles ParticleType.cpp ResonanceType.cpp Particle.cpp main.cp
 if (BUILD_TESTING)
 
   # aggiungi l'eseguibile boid.t
-  add_executable(particles.t particles.test.cpp)
+  add_executable(particles.t ParticleType.cpp ResonanceType.cpp particles.test.cpp)
   # aggiungi l'eseguibile boid.t alla lista dei test
   add_test(NAME particles.t COMMAND particles.t)
 

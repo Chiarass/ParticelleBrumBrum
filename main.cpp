@@ -1,5 +1,7 @@
+#include <iostream>
+
 #include "Particle.hpp"
 #include "ParticleType.hpp"
 #include "ResonanceType.hpp"
 
-int main() {}
+int main() { std::cout << "Ciao"; }

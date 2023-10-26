@@ -9,6 +9,7 @@ class ParticleType {
   const int fCharge{};
 
  public:
+  ParticleType();
   ParticleType(const char* parName, const double parMass, const int parCharge);
   const char* get_ParticleName();
   const double get_ParticleMass();
