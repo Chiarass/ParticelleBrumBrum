@@ -1,5 +1,5 @@
-#ifndef RESONANCETYPE
-#define RESONANCETYPE
+#ifndef RESONANCETYPE_HPP
+#define RESONANCETYPE_HPP
 #include "ParticleType.hpp"
 
 class ResonanceType : public ParticleType {
@@ -10,8 +10,8 @@ class ResonanceType : public ParticleType {
   ResonanceType();
   ResonanceType(const char* parName, const double parMass, const int parCharge,
                 const double resWidth);
-  const double get_ResonanceWidth();
-  void print();
+  virtual const double get_ResonanceWidth();
+  virtual void print() override;
 };
 
 #endif

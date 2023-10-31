@@ -1,6 +1,7 @@
-#ifndef PARTICLE
-#define PARTICLE
+#ifndef PARTICLE_HPP
+#define PARTICLE_HPP
 #include <array>
+#include <cmath>
 #include <iostream>
 
 #include "ParticleType.hpp"
@@ -10,73 +11,42 @@ class Particle {
  private:
   ParticleType particletype;
   ResonanceType resonancetype;
-  const char* f_Name = particletype.get_ParticleName();
+
+  const char *f_Name = particletype.get_ParticleName();
   static const int fMaxNumParticleType = 10;
-  static ParticleType* fParticleType[fMaxNumParticleType];
+  static ParticleType *fParticleType[fMaxNumParticleType];
   static int fNParticleType;
+
   int fIndex;
+
   double fPx;
   double fPy;
   double fPz;
-  static int FindParticle(const char* Name) {
-    for (int i; i < fMaxNumParticleType; ++i) {
-      if (fParticleType[i]->get_ParticleName() == Name) {
-        return i;
-      } else {
-        std::cout << "No correspondence, sorry";
-        return -1;
-      }
-    }
-  };
+
+  static int FindParticle(const char *Name);
 
  public:
-  Particle(const char* parName, int Index, double Px, double Py, double Pz)
-      : f_Name(parName),
-        fIndex(Index = FindParticle(parName)),
-        fPx(Px = 0),
-        fPy(Py = 0),
-        fPz(Pz = 0){};
-  int get_fIndex() { return fIndex; };
-  static void AddParticleType(const char* name, const double Mass,
-                              const int Charge, const double Width) {
-    fNParticleType = 0;
-    if (Width > 0) {
-      ResonanceType* fResonanceType[fMaxNumParticleType];
-      ParticleType* pPTR;
-      for (int i = 0; i < fMaxNumParticleType; ++i) {
-        fResonanceType[i] = static_cast<ResonanceType*>(fParticleType[i]);
-        for (int i = 0; i < fMaxNumParticleType; ++i) {
-          if (FindParticle(name) == -1) {
-            if (fNParticleType < fMaxNumParticleType) {
-              fResonanceType[i] = new ResonanceType(name, Mass, Charge, Width);
-              ++fNParticleType;
-            } else {
-              std::cout << "The array is already full, sorry bro" << std::endl;
-              break;
-            }
-          } else {
-            std::cout << "This particle is already there, sorry bro"
-                      << std::endl;
-            break;
-          }
-        }
-      }
-    } else {
-      for (int i = 0; i < fMaxNumParticleType; ++i) {
-        if (FindParticle(name) == -1) {
-          if (fNParticleType < fMaxNumParticleType) {
-            fParticleType[i] = new ParticleType(name, Mass, Charge);
-            ++fNParticleType;
-          } else {
-            std::cout << "The array is already full, sorry bro" << std::endl;
-            break;
-          }
-        } else {
-          std::cout << "This particle is already there, sorry bro" << std::endl;
-          break;
-        }
-      }
-    };
-  };
+  Particle(const char *, int, double, double, double);
+
+  int get_fIndex();
+
+  double const get_Xmomentum();
+  double const get_Ymomentum();
+  double const get_Zmomentum();
+  double const get_Mass();
+
+  void set_fIndex(int index);
+  void set_fIndex(const char *pname);
+  void set_P(double px, double py, double pz);
+
+  double const ParticleEnergy();
+  double InvMass(Particle &p);
+
+  void ArrayStatus();  // può essere statico? non lo so
+  void ParticleStatus();
+
+  static void AddParticleType(const char *, const double, const int,
+                              const double);
+  static void DeallocateMemory();
 };
 #endif

@@ -1,5 +1,5 @@
-#ifndef PARTICLETYPE
-#define PARTICLETYPE
+#ifndef PARTICLETYPE_HPP
+#define PARTICLETYPE_HPP
 #include <iostream>
 
 class ParticleType {
@@ -11,9 +11,11 @@ class ParticleType {
  public:
   ParticleType();
   ParticleType(const char* parName, const double parMass, const int parCharge);
-  const char* get_ParticleName();
-  const double get_ParticleMass();
-  const int get_ParticleCharge();
+
+  virtual const char* get_ParticleName();
+  virtual const double get_ParticleMass();
+  virtual const int get_ParticleCharge();
+
   virtual void print();
 };
 
