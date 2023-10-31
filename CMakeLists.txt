@@ -1,3 +1,7 @@
+include(CMakeListsCustom.txt)
+include_directories(${ROOT_INCLUDE_DIRS})
+
+
 cmake_minimum_required(VERSION 3.16)
 project(particles VERSION 0.1.0)
 
@@ -16,6 +20,8 @@ string(APPEND CMAKE_CXX_FLAGS_DEBUG " -fsanitize=address,undefined -fno-omit-fra
 string(APPEND CMAKE_EXE_LINKER_FLAGS_DEBUG " -fsanitize=address,undefined -fno-omit-frame-pointer")
 
 add_executable(particles ParticleType.cpp ResonanceType.cpp Particle.cpp main.cpp)
+
+target_link_libraries(particles ${ROOT_LIBRARIES})
 
 # se il testing e' abilitato...
 #   per disabilitare il testing, passare -DBUILD_TESTING=OFF a cmake durante la fase di configurazione
