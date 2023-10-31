@@ -11,6 +11,6 @@ const double ResonanceType::get_ResonanceWidth() { return fWidth; };
 
 void ResonanceType::print() {
   ParticleType::print();
-  std::cout << "Resonance Width: " << ResonanceType::get_ResonanceWidth()
-            << std::endl;
+  std::cout << ", "
+            << "Resonance Width: " << ResonanceType::get_ResonanceWidth();
 }
