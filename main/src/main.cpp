@@ -1,9 +1,5 @@
 #include <iostream>
 
-#include "Headers.hpp"
-#include "Particle.hpp"
-#include "ParticleType.hpp"
-#include "ResonanceType.hpp"
 #include "TApplication.h"
 #include "TDirectory.h"
 #include "TRint.h"
@@ -22,6 +18,6 @@ int main(int argc, char** argv) {
 
   // run application
   app.Run();
-  Particle::DeallocateMemory();
+  // Particle::DeallocateMemory();
   return 0;
 }

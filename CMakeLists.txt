@@ -1,4 +1,3 @@
-include(CMakeListsCustom.txt)
 include_directories(${ROOT_INCLUDE_DIRS})
 
 
@@ -9,6 +8,7 @@ cmake_minimum_required(VERSION 3.16)
 
 project(Root_template_project VERSION 0.0.1)
 
+include(CTest)
 # Specifica il compilatore C++
 set(CMAKE_CXX_COMPILER g++-11)  # Imposta il compilatore su g++-11
 
@@ -26,7 +26,7 @@ set(CONFIG_BUILD_DIR ${CMAKE_SOURCE_DIR}/project-compilation)
 
 # Config files
 # Include configuration files
-include(${CMAKE_SOURCE_DIR}/project-compilation/Settings.cmake)
+include(${CMAKE_SOURCE_DIR}/project-compilation/Setting.cmake)
 
 
 # Compiler flags

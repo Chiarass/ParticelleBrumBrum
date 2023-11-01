@@ -1,7 +1,7 @@
 #File to configure project source files
 include_guard(GLOBAL)
 
-#Process Libraries.hpp.in
+#Process Headers.hpp.in
 if(DEFINED PROGRAM_NAMESPACE AND
         DEFINED PROGRAM_NAME #AND
         #DEFINED PROGRAM_ATTACH_CLING AND
