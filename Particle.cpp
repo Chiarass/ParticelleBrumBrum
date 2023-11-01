@@ -112,12 +112,7 @@ void Particle::DeallocateMemory() {
     delete fParticleType[i];
   }
 }
-/*Un metodo (un “Setter”) che permetta di settare esplicitamente l’attributo
-fIndex corrispondente al codice della particella, controllando se il tipo
-corrispondente è già contemplato nell’array di puntatori a ParticleType. Fornire
-due versioni in overload, uno con argomento un intero, e uno con argomento il
-nome nella particella. Usare anche in questo caso il metodo privato
-FindParticle.*/
+
 
 
 
