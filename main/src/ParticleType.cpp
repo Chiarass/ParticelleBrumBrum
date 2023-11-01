@@ -10,6 +10,7 @@ const char *ParticleType::get_ParticleName() { return fName; };
 const double ParticleType::get_ParticleMass() { return fMass; };
 
 const int ParticleType::get_ParticleCharge() { return fCharge; };
+const double ParticleType::get_ParticleWidth() { return 0; };
 
 void ParticleType::print() {
   std::cout << "Name: " << ParticleType::get_ParticleName() << ", "

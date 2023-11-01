@@ -15,6 +15,7 @@ class ParticleType {
   virtual const char* get_ParticleName();
   virtual const double get_ParticleMass();
   virtual const int get_ParticleCharge();
+  virtual const double get_ParticleWidth();
 
   virtual void print();
 };

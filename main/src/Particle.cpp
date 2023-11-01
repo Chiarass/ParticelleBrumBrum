@@ -28,7 +28,8 @@ Particle::Particle(const char *parName, int Index, double Px, double Py,
       fIndex(Index = FindParticle(parName)),
       fPx(Px = 0),
       fPy(Py = 0),
-      fPz(Pz = 0){};
+      fPz(Pz = 0)
+      {};
 
 int Particle::get_fIndex() { return fIndex; }
 
@@ -36,9 +37,7 @@ double const Particle::get_Xmomentum() { return fPx; }
 double const Particle::get_Ymomentum() { return fPy; }
 double const Particle::get_Zmomentum() { return fPz; }
 
-double const Particle::get_Mass() const {
-  return particletype.get_ParticleMass();
-}
+double Particle::get_Mass() const { return particletype.get_ParticleMass(); }
 
 double const Particle::ParticleEnergy() {
   double const m = particletype.get_ParticleMass();
@@ -121,7 +120,7 @@ int Particle::Decay2body(Particle &dau1, Particle &dau2) const {
     return 1;
   }
 
-  const double massMot = get_Mass();
+  double massMot = get_Mass();
   double massDau1 = dau1.get_Mass();
   double massDau2 = dau2.get_Mass();
 
@@ -141,7 +140,7 @@ int Particle::Decay2body(Particle &dau1, Particle &dau2) const {
     w = sqrt((-2.0 * log(w)) / w);
     y1 = x1 * w;
 
-    massMot += fParticleType[fIndex]->get_ResonanceWidth() * y1;
+    massMot += fParticleType[fIndex]->get_ParticleWidth() * y1;
   }
 
   if (massMot < massDau1 + massDau2) {
