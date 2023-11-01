@@ -43,19 +43,3 @@ include(${CONFIG_BUILD_DIR}/Configuration.cmake)
 #Include target configuration
 include(${CONFIG_BUILD_DIR}/Targets.cmake)
 
-add_executable(particles ParticleType.cpp ResonanceType.cpp Particle.cpp main.cpp)
-
-#target_link_libraries(particles ${ROOT_LIBRARIES})
-
-# se il testing e' abilitato...
-#   per disabilitare il testing, passare -DBUILD_TESTING=OFF a cmake durante la fase di configurazione
-
-if (BUILD_TESTING)
-
-  # aggiungi l'eseguibile boid.t
-  add_executable(particles.t ParticleType.cpp ResonanceType.cpp particles.test.cpp)
-  # aggiungi l'eseguibile boid.t alla lista dei test
-  add_test(NAME particles.t COMMAND particles.t)
-
-
-endif()
