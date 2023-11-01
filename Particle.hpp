@@ -25,6 +25,8 @@ class Particle {
 
   static int FindParticle(const char *Name);
 
+  void Boost(double bx, double by, double bz);
+
  public:
   Particle(const char *, int, double, double, double);
 
@@ -48,5 +50,6 @@ class Particle {
   static void AddParticleType(const char *, const double, const int,
                               const double);
   static void DeallocateMemory();
+  int Decay2body(Particle &dau1, Particle &dau2) const;
 };
 #endif
