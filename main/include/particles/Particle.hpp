@@ -35,7 +35,7 @@ class Particle {
   double const get_Xmomentum();
   double const get_Ymomentum();
   double const get_Zmomentum();
-  double const get_Mass();
+  double const get_Mass() const ;
 
   void set_fIndex(int index);
   void set_fIndex(const char *pname);

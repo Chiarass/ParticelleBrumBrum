@@ -36,7 +36,9 @@ double const Particle::get_Xmomentum() { return fPx; }
 double const Particle::get_Ymomentum() { return fPy; }
 double const Particle::get_Zmomentum() { return fPz; }
 
-double const Particle::get_Mass() { return particletype.get_ParticleMass(); }
+double const Particle::get_Mass() const {
+  return particletype.get_ParticleMass();
+}
 
 double const Particle::ParticleEnergy() {
   double const m = particletype.get_ParticleMass();
@@ -113,82 +115,78 @@ void Particle::DeallocateMemory() {
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-/*int Particle::Decay2body(Particle &dau1,Particle &dau2) const {
-  if(GetMass() == 0.0){
+int Particle::Decay2body(Particle &dau1, Particle &dau2) const {
+  if (get_Mass() == 0.0) {
     printf("Decayment cannot be preformed if mass is zero\n");
     return 1;
   }
-  
-  double massMot = GetMass();
-  double massDau1 = dau1.GetMass();
-  double massDau2 = dau2.GetMass();
 
-  if(fIParticle > -1){ // add width effect
+  const double massMot = get_Mass();
+  double massDau1 = dau1.get_Mass();
+  double massDau2 = dau2.get_Mass();
+
+  if (fIndex > -1) {  // add width effect
 
     // gaussian random numbers
 
     float x1, x2, w, y1;
-    
-    double invnum = 1./RAND_MAX;
+
+    double invnum = 1. / RAND_MAX;
     do {
-      x1 = 2.0 * rand()*invnum - 1.0;
-      x2 = 2.0 * rand()*invnum - 1.0;
+      x1 = 2.0 * rand() * invnum - 1.0;
+      x2 = 2.0 * rand() * invnum - 1.0;
       w = x1 * x1 + x2 * x2;
-    } while ( w >= 1.0 );
-    
-    w = sqrt( (-2.0 * log( w ) ) / w );
+    } while (w >= 1.0);
+
+    w = sqrt((-2.0 * log(w)) / w);
     y1 = x1 * w;
 
-    massMot += fParticleType[fIParticle]->GetWidth() * y1;
-
+    massMot += fParticleType[fIndex]->get_ResonanceWidth() * y1;
   }
 
-  if(massMot < massDau1 + massDau2){
-    printf("Decayment cannot be preformed because mass is too low in this channel\n");
+  if (massMot < massDau1 + massDau2) {
+    printf(
+        "Decayment cannot be preformed because mass is too low in this "
+        "channel\n");
     return 2;
   }
-  
-  double pout = sqrt((massMot*massMot - (massDau1+massDau2)*(massDau1+massDau2))*(massMot*massMot - (massDau1-massDau2)*(massDau1-massDau2)))/massMot*0.5;
 
-  double norm = 2*M_PI/RAND_MAX;
+  double pout =
+      sqrt(
+          (massMot * massMot - (massDau1 + massDau2) * (massDau1 + massDau2)) *
+          (massMot * massMot - (massDau1 - massDau2) * (massDau1 - massDau2))) /
+      massMot * 0.5;
 
-  double phi = rand()*norm;
-  double theta = rand()*norm*0.5 - M_PI/2.;
-  dau1.SetP(pout*sin(theta)*cos(phi),pout*sin(theta)*sin(phi),pout*cos(theta));
-  dau2.SetP(-pout*sin(theta)*cos(phi),-pout*sin(theta)*sin(phi),-pout*cos(theta));
+  double norm = 2 * M_PI / RAND_MAX;
 
-  double energy = sqrt(fPx*fPx + fPy*fPy + fPz*fPz + massMot*massMot);
+  double phi = rand() * norm;
+  double theta = rand() * norm * 0.5 - M_PI / 2.;
+  dau1.set_P(pout * sin(theta) * cos(phi), pout * sin(theta) * sin(phi),
+             pout * cos(theta));
+  dau2.set_P(-pout * sin(theta) * cos(phi), -pout * sin(theta) * sin(phi),
+             -pout * cos(theta));
 
-  double bx = fPx/energy;
-  double by = fPy/energy;
-  double bz = fPz/energy;
+  double energy = sqrt(fPx * fPx + fPy * fPy + fPz * fPz + massMot * massMot);
 
-  dau1.Boost(bx,by,bz);
-  dau2.Boost(bx,by,bz);
+  double bx = fPx / energy;
+  double by = fPy / energy;
+  double bz = fPz / energy;
+
+  dau1.Boost(bx, by, bz);
+  dau2.Boost(bx, by, bz);
 
   return 0;
 }
-void Particle::Boost(double bx, double by, double bz)
-{
+void Particle::Boost(double bx, double by, double bz) {
+  double energy = ParticleEnergy();
 
-  double energy = GetEnergy();
-
-  //Boost this Lorentz vector
-  double b2 = bx*bx + by*by + bz*bz;
+  // Boost this Lorentz vector
+  double b2 = bx * bx + by * by + bz * bz;
   double gamma = 1.0 / sqrt(1.0 - b2);
-  double bp = bx*fPx + by*fPy + bz*fPz;
-  double gamma2 = b2 > 0 ? (gamma - 1.0)/b2 : 0.0;
+  double bp = bx * fPx + by * fPy + bz * fPz;
+  double gamma2 = b2 > 0 ? (gamma - 1.0) / b2 : 0.0;
 
-  fPx += gamma2*bp*bx + gamma*bx*energy;
-  fPy += gamma2*bp*by + gamma*by*energy;
-  fPz += gamma2*bp*bz + gamma*bz*energy;}*/
+  fPx += gamma2 * bp * bx + gamma * bx * energy;
+  fPy += gamma2 * bp * by + gamma * by * energy;
+  fPz += gamma2 * bp * bz + gamma * bz * energy;
+}

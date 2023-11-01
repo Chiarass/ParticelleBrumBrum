@@ -23,13 +23,13 @@ cmake --build build/debug
 To run the program:
 
 ```
-build/debug/particles
+build/debug/main/main.bin
 ```
 
 To run the test:
 
 ```
-build/debug/particles.t
+build/debug/sample.t
 ```
 
 To not build the test, set:
