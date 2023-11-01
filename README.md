@@ -1,6 +1,12 @@
-# ParticelleBrumBrum
+# High Energy Physics Simulator
 
-Particles project for unibo's physics course.
+This project wants to simulate a detector observing the traces of the following particles:
+
+1. Pion (with associated antiparticle)
+2. Kaon (with associated antiparticle)
+3. Proton (with associated antiparticle)
+
+It also simulates the decay and resonance phenomenons of neutral Kaons by turning it into decay products. In order to start the program, please follow the instructions below. 
 ----
 To build the program:
 
