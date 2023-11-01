@@ -1,3 +1,4 @@
-n/
-n.pub/
-build/
+#ignore directories
+cmake-build-release
+cmake-build-debug
+build
