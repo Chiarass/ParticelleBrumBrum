@@ -3,34 +3,49 @@ include_directories(${ROOT_INCLUDE_DIRS})
 
 
 cmake_minimum_required(VERSION 3.16)
-list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
-find_package(ROOT REQUIRED COMPONENTS RIO Tree MathCore Hist)
-include(${ROOT_USE_FILE})
+#list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
+#find_package(ROOT REQUIRED COMPONENTS RIO Tree MathCore Hist)
+#include(${ROOT_USE_FILE})
 
-project(particles VERSION 0.1.0)
+project(Root_template_project VERSION 0.0.1)
 
 # Specifica il compilatore C++
 set(CMAKE_CXX_COMPILER g++-11)  # Imposta il compilatore su g++-11
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+#set config base path
+set(CONFIG_BUILD_DIR ${CMAKE_SOURCE_DIR}/project-compilation)
+
 # richiedi l'uso di C++17, senza estensioni non-standard offerte dal compilatore usato 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS ON)
+#set(CMAKE_CXX_STANDARD 17)
+#set(CMAKE_CXX_STANDARD_REQUIRED ON)
+#set(CMAKE_CXX_EXTENSIONS ON)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 
-# abilita warning
-string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra")
+# Config files
+# Include configuration files
+include(${CMAKE_SOURCE_DIR}/project-compilation/Settings.cmake)
 
-# abilita l'address sanitizer e l'undefined-behaviour sanitizer in debug mode
-string(APPEND CMAKE_CXX_FLAGS_DEBUG " -fsanitize=address,undefined -fno-omit-frame-pointer")
-string(APPEND CMAKE_EXE_LINKER_FLAGS_DEBUG " -fsanitize=address,undefined -fno-omit-frame-pointer")
+
+# Compiler flags
+# NOTE: must be placed after config as variables needed are defined there
+include(${CONFIG_BUILD_DIR}/Flags.cmake)
+
+#Libraries
+include(${CONFIG_BUILD_DIR}/Libraries.cmake)
+
+#Configure project files
+include(${CONFIG_BUILD_DIR}/Configuration.cmake)
+
+#Targets
+#Include target configuration
+include(${CONFIG_BUILD_DIR}/Targets.cmake)
 
 add_executable(particles ParticleType.cpp ResonanceType.cpp Particle.cpp main.cpp)
 
-target_link_libraries(particles ${ROOT_LIBRARIES})
+#target_link_libraries(particles ${ROOT_LIBRARIES})
 
 # se il testing e' abilitato...
 #   per disabilitare il testing, passare -DBUILD_TESTING=OFF a cmake durante la fase di configurazione
