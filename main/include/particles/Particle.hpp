@@ -9,10 +9,7 @@
 
 class Particle {
  private:
-  ParticleType particletype;
-  ResonanceType resonancetype;
-
-  const char *f_Name = particletype.get_ParticleName();
+  const char *f_Name;
   static const int fMaxNumParticleType = 10;
   static ParticleType *fParticleType[fMaxNumParticleType];
   static int fNParticleType;
@@ -28,14 +25,15 @@ class Particle {
   void Boost(double bx, double by, double bz);
 
  public:
-  Particle(const char *, int, double, double, double);
+  Particle();
+  Particle(const char *, double, double, double);
 
   int get_fIndex();
 
   double const get_Xmomentum();
   double const get_Ymomentum();
   double const get_Zmomentum();
-  double get_Mass() const ;
+  double get_Mass() const;
 
   void set_fIndex(int index);
   void set_fIndex(const char *pname);

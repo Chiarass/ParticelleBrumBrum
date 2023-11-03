@@ -1,4 +1,4 @@
-#include "ParticleType.hpp"
+#include "particles/ParticleType.hpp"
 
 ParticleType::ParticleType(){};
 ParticleType::ParticleType(const char *parName, const double parMass,

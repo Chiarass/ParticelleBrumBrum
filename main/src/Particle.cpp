@@ -1,12 +1,13 @@
-#include "Particle.hpp"
+
+#include "particles/Particle.hpp"
 
 #include <array>
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
 
-#include "ParticleType.hpp"
-#include "ResonanceType.hpp"
+#include "particles/ParticleType.hpp"
+#include "particles/ResonanceType.hpp"
 
 int const Particle::fMaxNumParticleType;
 int Particle::fNParticleType = 0;
@@ -21,15 +22,11 @@ int Particle::FindParticle(const char *Name) {
   std::cout << "No correspondence, sorry";
   return -1;
 }
-
-Particle::Particle(const char *parName, int Index, double Px, double Py,
-                   double Pz)
-    : f_Name(parName),
-      fIndex(Index = FindParticle(parName)),
-      fPx(Px = 0),
-      fPy(Py = 0),
-      fPz(Pz = 0)
-      {};
+Particle::Particle(){};
+Particle::Particle(const char *parName, double Px, double Py, double Pz)
+    : f_Name(parName), fPx(Px = 0), fPy(Py = 0), fPz(Pz = 0) {
+  fIndex = FindParticle(parName);
+};
 
 int Particle::get_fIndex() { return fIndex; }
 
@@ -37,10 +34,12 @@ double const Particle::get_Xmomentum() { return fPx; }
 double const Particle::get_Ymomentum() { return fPy; }
 double const Particle::get_Zmomentum() { return fPz; }
 
-double Particle::get_Mass() const { return particletype.get_ParticleMass(); }
+double Particle::get_Mass() const {
+  return fParticleType[fIndex]->get_ParticleMass();
+}
 
 double const Particle::ParticleEnergy() {
-  double const m = particletype.get_ParticleMass();
+  double const m = fParticleType[fIndex]->get_ParticleMass();
   double P = fPx * fPx + fPy * fPy + fPz * fPz;
   return sqrt(m * m + P);
 }

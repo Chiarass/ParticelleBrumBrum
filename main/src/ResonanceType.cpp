@@ -1,4 +1,4 @@
-#include "ResonanceType.hpp"
+#include "particles/ResonanceType.hpp"
 
 #include "ParticleType.hpp"
 

@@ -4,10 +4,10 @@
 #include <iostream>
 #include <string>
 
+#include "Headers.hpp"
+#include "doctest.h"
 #include "particles/ParticleType.hpp"
 #include "particles/ResonanceType.hpp"
-#include "doctest.h"
-#include "Headers.hpp"
 
 ParticleType* parArray[2];
 
