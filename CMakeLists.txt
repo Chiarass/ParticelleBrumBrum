@@ -1,13 +1,15 @@
-include(CMakeListsCustom.txt)
-include_directories(${ROOT_INCLUDE_DIRS})
+
+
 
 
 cmake_minimum_required(VERSION 3.16)
-list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
-find_package(ROOT REQUIRED COMPONENTS RIO Tree MathCore Hist)
-include(${ROOT_USE_FILE})
+
 
 project(particles VERSION 0.1.0)
+
+
+# abilita il supporto per i test, tra cui l'opzione BUILD_TESTING usata sotto
+include(CTest)
 
 # Specifica il compilatore C++
 set(CMAKE_CXX_COMPILER g++-11)  # Imposta il compilatore su g++-11
@@ -26,6 +28,7 @@ string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra")
 
 # abilita l'address sanitizer e l'undefined-behaviour sanitizer in debug mode
 string(APPEND CMAKE_CXX_FLAGS_DEBUG " -fsanitize=address,undefined -fno-omit-frame-pointer")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g3 -ggdb")
 string(APPEND CMAKE_EXE_LINKER_FLAGS_DEBUG " -fsanitize=address,undefined -fno-omit-frame-pointer")
 
 add_executable(particles ParticleType.cpp ResonanceType.cpp Particle.cpp main.cpp)
@@ -38,7 +41,7 @@ target_link_libraries(particles ${ROOT_LIBRARIES})
 if (BUILD_TESTING)
 
   # aggiungi l'eseguibile boid.t
-  add_executable(particles.t ParticleType.cpp ResonanceType.cpp particles.test.cpp)
+  add_executable(particles.t ParticleType.cpp ResonanceType.cpp Particle.cpp particles.test.cpp)
   # aggiungi l'eseguibile boid.t alla lista dei test
   add_test(NAME particles.t COMMAND particles.t)
 
