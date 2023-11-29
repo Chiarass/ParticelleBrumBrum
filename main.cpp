@@ -4,7 +4,8 @@
 #include "ParticleType.hpp"
 #include "ResonanceType.hpp"
 
-int main() {
-  Particle::DeallocateMemory();
+int main()
+{
+  // Particle::DeallocateMemory();
   return 0;
 }

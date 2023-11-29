@@ -7,10 +7,10 @@ ResonanceType::ResonanceType(const char *parName, const double parMass,
                              const int parCharge, const double resWidth)
     : ParticleType(parName, parMass, parCharge), fWidth(resWidth){};
 
-const double ResonanceType::get_ResonanceWidth() { return fWidth; };
+const double ResonanceType::get_Width() { return fWidth; };
 
 void ResonanceType::print() {
   ParticleType::print();
   std::cout << ", "
-            << "Resonance Width: " << ResonanceType::get_ResonanceWidth();
+            << "Resonance Width: " << ResonanceType::get_Width();
 }
