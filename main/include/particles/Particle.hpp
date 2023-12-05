@@ -1,8 +1,10 @@
 #ifndef PARTICLE_HPP
 #define PARTICLE_HPP
+
 #include <array>
 #include <cmath>
 #include <iostream>
+#include <string>
 
 #include "ParticleType.hpp"
 #include "ResonanceType.hpp"
@@ -25,29 +27,39 @@ class Particle {
   void Boost(double bx, double by, double bz);
 
  public:
+  // Constructors
   Particle();
   Particle(const char *, double, double, double);
 
+  // Getter methods
   int get_fIndex();
-
   double const get_Xmomentum();
   double const get_Ymomentum();
   double const get_Zmomentum();
   double get_Mass() const;
+  double get_Charge() const;                    //?????
+  bool get_specificMass(double, char *) const;  //?????
 
+  // Setter methods
   void set_fIndex(int index);
   void set_fIndex(const char *pname);
+  void set_ParticleTypeFromMap(const std::string &particleType);
   void set_P(double px, double py, double pz);
 
+  // Other methods
   double const ParticleEnergy();
   double InvMass(Particle &p);
 
-  void ArrayStatus();  // può essere statico? non lo so
+  // Static methods
+  static void ArrayStatus();
   void ParticleStatus();
 
+  // Static methods for particle type management
   static void AddParticleType(const char *, const double, const int,
                               const double);
-  static void DeallocateMemory();
+
+  // Decay method
   int Decay2body(Particle &dau1, Particle &dau2) const;
 };
+
 #endif
