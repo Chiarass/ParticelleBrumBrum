@@ -267,7 +267,6 @@ int main(int argc, char **argv) {
   app.Run();
   setStyle();
   simulation();
-
   // Close the ROOT application
   gApplication->Terminate(0);
 
