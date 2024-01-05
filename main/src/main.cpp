@@ -1,10 +1,10 @@
 #include <array>
 #include <cmath>
 #include <iostream>
+#include <memory>
 #include <vector>
 
 #include "../include/Headers.hpp"
-#include "../include/Map.hpp"
 #include "../include/Particle.hpp"
 #include "../include/ParticleType.hpp"
 #include "../include/ResonanceType.hpp"
@@ -238,12 +238,6 @@ void simulation() {
         }
       }
     }
-  }
-
-  // Loop to deallocate memory for each Particle object
-  for (int i = 0; i < N; ++i) {
-    delete EventParticles[i];
-    EventParticles[i] = nullptr;
   }
 
   // Writing histo on TFile
