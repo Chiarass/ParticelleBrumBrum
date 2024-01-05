@@ -1,11 +1,10 @@
-// Particle.hpp
-
 #include "../include/Particle.hpp"
 
 #include <array>
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
+#include <stdexcept>
 
 #include "../include/ParticleType.hpp"
 #include "../include/ResonanceType.hpp"
@@ -21,6 +20,8 @@ int Particle::FindParticle(const char *Name) {
   for (int i = 0; i < fMaxNumParticleType; ++i) {
     if (fParticleType[i]->get_ParticleName() == Name) {
       return i;
+    } else {
+      return -1;
     }
   }
 
@@ -61,10 +62,15 @@ double Particle::get_Charge() const {
 
 // Check if a particle has a specific mass and type
 bool Particle::get_specificMass(double mass, const char *name) const {
-  if (fParticleType[FindParticle(name)]->get_ParticleMass() == mass) {
-    return true;
+  if (FindParticle(name) != -1) {
+    if (fParticleType[FindParticle(name)]->get_ParticleMass() == mass) {
+      return true;
+    } else {
+      return false;
+    }
   } else {
-    return false;
+    // Handling error
+    throw std::runtime_error("Invalid name!");
   }
 }
 

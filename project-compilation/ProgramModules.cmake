@@ -6,4 +6,5 @@ include_guard(DIRECTORY)
          ${PROGRAM_SOURCES}/Particle.cpp
          ${PROGRAM_SOURCES}/ResonanceType.cpp
          ${PROGRAM_SOURCES}/ParticleType.cpp
+         ${PROGRAM_SOURCES}/Analysis.cpp
          ${PROGRAM_HEADERS}/Headers.hpp)

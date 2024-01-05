@@ -36,17 +36,6 @@ void simulation() {
   // Creating TFile
   std::unique_ptr<TFile> file(new TFile("simulations-Root", "RECREATE"));
 
-  // Define enum for ParticleType
-  enum ParticleType {
-    PionPlus,
-    PionMinus,
-    KaonPlus,
-    KaonMinus,
-    ProtonPlus,
-    ProtonMinus,
-    KaonStar
-  };
-
   // Define particle types and their properties
   Particle::AddParticleType("Pion+", 0.13957, 1, 0.);
   Particle::AddParticleType("Pion-", 0.13957, -1, 0.);
@@ -108,7 +97,7 @@ void simulation() {
   // Loop over events
   for (int i = 0; i < Events; i++) {
     // Reset M at the beginning of each event
-    M = 0;
+    M = 100;
 
     // Loop over particles in each event
     for (int j = 0; j < Particles; ++j) {
@@ -137,31 +126,31 @@ void simulation() {
 
       // Particle generation based on probabilities
       if (xRAND < 0.4) {
-        EventParticles[j]->set_fIndex(PionPlus);
+        EventParticles[j]->set_fIndex("Pion+");
         HistoParticles->Fill(EventParticles[j]->get_fIndex());
         HistoEnergy->Fill(EventParticles[j]->ParticleEnergy());
       } else if (xRAND < 0.8) {
-        EventParticles[j]->set_fIndex(PionMinus);
+        EventParticles[j]->set_fIndex("Pion-");
         HistoParticles->Fill(EventParticles[j]->get_fIndex());
         HistoEnergy->Fill(EventParticles[j]->ParticleEnergy());
       } else if (xRAND < 0.85) {
-        EventParticles[j]->set_fIndex(KaonPlus);
+        EventParticles[j]->set_fIndex("Kaon+");
         HistoParticles->Fill(EventParticles[j]->get_fIndex());
         HistoEnergy->Fill(EventParticles[j]->ParticleEnergy());
       } else if (xRAND < 0.9) {
-        EventParticles[j]->set_fIndex(KaonMinus);
+        EventParticles[j]->set_fIndex("Kaon-");
         HistoParticles->Fill(EventParticles[j]->get_fIndex());
         HistoEnergy->Fill(EventParticles[j]->ParticleEnergy());
       } else if (xRAND < 0.945) {
-        EventParticles[j]->set_fIndex(ProtonPlus);
+        EventParticles[j]->set_fIndex("Proton+");
         HistoParticles->Fill(EventParticles[j]->get_fIndex());
         HistoEnergy->Fill(EventParticles[j]->ParticleEnergy());
       } else if (xRAND < 0.99) {
-        EventParticles[j]->set_fIndex(ProtonMinus);
+        EventParticles[j]->set_fIndex("Proton-");
         HistoParticles->Fill(EventParticles[j]->get_fIndex());
         HistoEnergy->Fill(EventParticles[j]->ParticleEnergy());
       } else {
-        EventParticles[j]->set_fIndex(KaonStar);
+        EventParticles[j]->set_fIndex("Kaon*");
         HistoParticles->Fill(EventParticles[j]->get_fIndex());
         HistoEnergy->Fill(EventParticles[j]->ParticleEnergy());
 
