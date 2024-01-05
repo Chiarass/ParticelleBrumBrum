@@ -8,7 +8,7 @@ set(PROGRAM_TARGET_MAIN main.bin)
 # Register the executable
 add_executable(${PROGRAM_TARGET_MAIN} ${PROGRAM_MODULES_MAIN})
 
-target_include_directories(${PROGRAM_TARGET_MAIN} PRIVATE ${PROGRAM_HEADERS})
+target_include_directories(${PROGRAM_TARGET_MAIN} PRIVATE ${ROOT_INCLUDE_DIRS})
 target_link_libraries(${PROGRAM_TARGET_MAIN} ${PROGRAM_LIBRARIES_DEFAULT})
 
 #Generate root dictionary

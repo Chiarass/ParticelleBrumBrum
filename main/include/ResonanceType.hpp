@@ -14,7 +14,7 @@ class ResonanceType : public ParticleType {
                 const double resWidth);
 
   // Method to retrieve the width of the resonance
-  virtual const double get_ResonanceWidth();
+  virtual double get_ResonanceWidth() const;
 
   // Method to print information about the resonance
   virtual void print() override;

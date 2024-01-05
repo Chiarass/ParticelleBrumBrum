@@ -1,4 +1,4 @@
-#include "ParticleType.hpp"
+#include "../include/ParticleType.hpp"
 
 // Default constructor
 ParticleType::ParticleType(){};
@@ -9,16 +9,16 @@ ParticleType::ParticleType(const char *parName, const double parMass,
     : fName(parName), fMass(parMass), fCharge(parCharge){};
 
 // Getter function for particle name
-const char *ParticleType::get_ParticleName() { return fName; };
+const char *ParticleType::get_ParticleName() const { return fName; };
 
 // Getter function for particle mass
-const double ParticleType::get_ParticleMass() { return fMass; };
+double ParticleType::get_ParticleMass() const { return fMass; };
 
 // Getter function for particle charge
-const int ParticleType::get_ParticleCharge() { return fCharge; };
+int ParticleType::get_ParticleCharge() const { return fCharge; };
 
 // Getter function for particle width (always returns 0 for this implementation)
-const double ParticleType::get_ParticleWidth() { return 0; };
+double ParticleType::get_ParticleWidth() const { return 0; };
 
 // Print function to display particle information
 void ParticleType::print() {

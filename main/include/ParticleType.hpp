@@ -15,10 +15,10 @@ class ParticleType {
   ParticleType(const char* parName, const double parMass, const int parCharge);
 
   // Methods to retrieve information about the particle
-  virtual const char* get_ParticleName();
-  virtual const double get_ParticleMass();
-  virtual const int get_ParticleCharge();
-  virtual const double get_ParticleWidth();
+  virtual const char* get_ParticleName() const;
+  virtual double get_ParticleMass() const;
+  virtual int get_ParticleCharge() const;
+  virtual double get_ParticleWidth() const;
 
   // Method to print information about the particle
   virtual void print();

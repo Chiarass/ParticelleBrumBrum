@@ -13,7 +13,7 @@
 class particle_Info {
  private:
   // Unordered map to store particle information
-  std::unordered_map<int, std::pair<std::string, double>> particle_Map;
+  static std::unordered_map<int, std::pair<std::string, double>> particle_Map;
 
  public:
   // Constructor and Destructor
@@ -21,7 +21,7 @@ class particle_Info {
   ~particle_Info();
 
   // Method to initialize the particle map
-  void InitializeMap();
+  static void InitializeMap();
 
   // Method to get the particle type based on a random value
   std::string GetParticleType(double random) const;

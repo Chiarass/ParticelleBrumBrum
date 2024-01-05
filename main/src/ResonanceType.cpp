@@ -1,6 +1,6 @@
-#include "ResonanceType.hpp"
+#include "../include/ResonanceType.hpp"
 
-#include "ParticleType.hpp"
+#include "../include/ParticleType.hpp"
 
 // Default constructor for ResonanceType
 ResonanceType::ResonanceType() : fWidth(0.0){};
@@ -12,7 +12,7 @@ ResonanceType::ResonanceType(const char *parName, const double parMass,
     : ParticleType(parName, parMass, parCharge), fWidth(resWidth){};
 
 // Getter function for the resonance width
-const double ResonanceType::get_ResonanceWidth() { return fWidth; };
+double ResonanceType::get_ResonanceWidth() const { return fWidth; };
 
 // Print function to display information about the ResonanceType
 void ResonanceType::print() {

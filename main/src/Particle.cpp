@@ -1,14 +1,14 @@
 // Particle.hpp
 
-#include "Particle.hpp"
+#include "../include/Particle.hpp"
 
 #include <array>
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
 
-#include "ParticleType.hpp"
-#include "ResonanceType.hpp"
+#include "../include/ParticleType.hpp"
+#include "../include/ResonanceType.hpp"
 
 // Definition of constants
 int const Particle::fMaxNumParticleType;
@@ -45,9 +45,9 @@ Particle::Particle(const char *parName, double Px, double Py, double Pz)
 int Particle::get_fIndex() { return fIndex; }
 
 // Getters for momentum components
-double const Particle::get_Xmomentum() { return fPx; }
-double const Particle::get_Ymomentum() { return fPy; }
-double const Particle::get_Zmomentum() { return fPz; }
+double Particle::get_Xmomentum() const { return fPx; }
+double Particle::get_Ymomentum() const { return fPy; }
+double Particle::get_Zmomentum() const { return fPz; }
 
 // Getter for particle mass using the particle type
 double Particle::get_Mass() const {
@@ -60,7 +60,7 @@ double Particle::get_Charge() const {
 }
 
 // Check if a particle has a specific mass and type
-bool Particle::get_specificMass(double mass, char *name) const {
+bool Particle::get_specificMass(double mass, const char *name) const {
   if (fParticleType[FindParticle(name)]->get_ParticleMass() == mass) {
     return true;
   } else {
@@ -69,7 +69,7 @@ bool Particle::get_specificMass(double mass, char *name) const {
 }
 
 // Calculate and return the particle energy using the particle type
-double const Particle::ParticleEnergy() {
+double Particle::ParticleEnergy() const {
   double const m = fParticleType[fIndex]->get_ParticleMass();
   double P = fPx * fPx + fPy * fPy + fPz * fPz;
   return sqrt(m * m + P);
@@ -186,49 +186,51 @@ int Particle::Decay2body(Particle &dau1, Particle &dau2) const {
     // Modify the mass with width effect
     massMot += fParticleType[fIndex]->get_ParticleWidth() * y1;
   }
+
+  if (massMot < massDau1 + massDau2) {
+    // Check if the total mass after decay is less than the sum of daughter
+    // masses
+    printf(
+        "Decayment cannot be performed because mass is too low in this "
+        "channel\n");
+    return 2;
+  }
+
+  // Calculate the magnitude of the momentum of the daughters in the
+  // center-of-mass frame
+  double pout =
+      sqrt(
+          (massMot * massMot - (massDau1 + massDau2) * (massDau1 + massDau2)) *
+          (massMot * massMot - (massDau1 - massDau2) * (massDau1 - massDau2))) /
+      massMot * 0.5;
+
+  // Generate random angles for the direction of the daughters
+  double norm = 2 * M_PI / RAND_MAX;
+  double phi = rand() * norm;
+  double theta = rand() * norm * 0.5 - M_PI / 2.;
+
+  // Set the momentum of the daughters based on the random angles and calculated
+  // magnitude
+  dau1.set_P(pout * sin(theta) * cos(phi), pout * sin(theta) * sin(phi),
+             pout * cos(theta));
+  dau2.set_P(-pout * sin(theta) * cos(phi), -pout * sin(theta) * sin(phi),
+             -pout * cos(theta));
+
+  // Calculate the energy of the parent particle
+  double energy = sqrt(fPx * fPx + fPy * fPy + fPz * fPz + massMot * massMot);
+
+  // Calculate boost parameters based on the parent particle's momentum
+  double bx = fPx / energy;
+  double by = fPy / energy;
+  double bz = fPz / energy;
+
+  // Boost the daughters to the parent particle's rest frame
+  dau1.Boost(bx, by, bz);
+  dau2.Boost(bx, by, bz);
+
+  // Return 0 to indicate successful decay
+  return 0;
 }
-
-if (massMot < massDau1 + massDau2) {
-  // Check if the total mass after decay is less than the sum of daughter masses
-  printf(
-      "Decayment cannot be performed because mass is too low in this "
-      "channel\n");
-  return 2;
-}
-
-// Calculate the magnitude of the momentum of the daughters in the
-// center-of-mass frame
-double pout =
-    sqrt((massMot * massMot - (massDau1 + massDau2) * (massDau1 + massDau2)) *
-         (massMot * massMot - (massDau1 - massDau2) * (massDau1 - massDau2))) /
-    massMot * 0.5;
-
-// Generate random angles for the direction of the daughters
-double norm = 2 * M_PI / RAND_MAX;
-double phi = rand() * norm;
-double theta = rand() * norm * 0.5 - M_PI / 2.;
-
-// Set the momentum of the daughters based on the random angles and calculated
-// magnitude
-dau1.set_P(pout *sin(theta) * cos(phi), pout *sin(theta) * sin(phi),
-           pout *cos(theta));
-dau2.set_P(-pout *sin(theta) * cos(phi), -pout *sin(theta) * sin(phi),
-           -pout *cos(theta));
-
-// Calculate the energy of the parent particle
-double energy = sqrt(fPx * fPx + fPy * fPy + fPz * fPz + massMot * massMot);
-
-// Calculate boost parameters based on the parent particle's momentum
-double bx = fPx / energy;
-double by = fPy / energy;
-double bz = fPz / energy;
-
-// Boost the daughters to the parent particle's rest frame
-dau1.Boost(bx, by, bz);
-dau2.Boost(bx, by, bz);
-
-// Return 0 to indicate successful decay
-return 0;  // maybe I lost a }
 
 void Particle::Boost(double bx, double by, double bz) {
   // Boost the particle's momentum in the specified direction

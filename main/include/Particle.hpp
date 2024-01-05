@@ -33,12 +33,12 @@ class Particle {
 
   // Getter methods
   int get_fIndex();
-  double const get_Xmomentum();
-  double const get_Ymomentum();
-  double const get_Zmomentum();
+  double get_Xmomentum() const;
+  double get_Ymomentum() const;
+  double get_Zmomentum() const;
   double get_Mass() const;
-  double get_Charge() const;                    //?????
-  bool get_specificMass(double, char *) const;  //?????
+  double get_Charge() const;
+  bool get_specificMass(double, const char *) const;
 
   // Setter methods
   void set_fIndex(int index);
@@ -47,7 +47,7 @@ class Particle {
   void set_P(double px, double py, double pz);
 
   // Other methods
-  double const ParticleEnergy();
+  double ParticleEnergy() const;
   double InvMass(Particle &p);
 
   // Static methods

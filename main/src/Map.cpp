@@ -1,9 +1,9 @@
-#include "Map.hpp"
+#include "../include/Map.hpp"
 
-#include "Headers.hpp"
-#include "Particle.hpp"
-#include "ParticleType.hpp"
-#include "ResonanceType.hpp"
+#include "../include/Headers.hpp"
+#include "../include/Particle.hpp"
+#include "../include/ParticleType.hpp"
+#include "../include/ResonanceType.hpp"
 
 // Constructor: Initializes the particle map upon object creation
 particle_Info::particle_Info() {
@@ -19,13 +19,13 @@ particle_Info::~particle_Info() {
 // Function to initialize the map with desired values and associated
 // probabilities
 void particle_Info::InitializeMap() {
-  particleMap[0] = std::make_pair("Pion+", 0.4);
-  particleMap[1] = std::make_pair("Pion-", 0.4);
-  particleMap[2] = std::make_pair("Kaon+", 0.05);
-  particleMap[3] = std::make_pair("Kaon-", 0.05);
-  particleMap[4] = std::make_pair("Proton+", 0.045);
-  particleMap[5] = std::make_pair("Proton-", 0.045);
-  particleMap[6] = std::make_pair("Kaon*", 0.01);
+  particle_Map[0] = std::make_pair("Pion+", 0.4);
+  particle_Map[1] = std::make_pair("Pion-", 0.4);
+  particle_Map[2] = std::make_pair("Kaon+", 0.05);
+  particle_Map[3] = std::make_pair("Kaon-", 0.05);
+  particle_Map[4] = std::make_pair("Proton+", 0.045);
+  particle_Map[5] = std::make_pair("Proton-", 0.045);
+  particle_Map[6] = std::make_pair("Kaon*", 0.01);
   // ... add other particle types if needed
 }
 
@@ -35,7 +35,7 @@ std::string particle_Info::GetParticleType(double random) const {
 
   // Loop through the map to find the particle type associated with the random
   // value
-  for (const auto& entry : particleMap) {
+  for (const auto& entry : particle_Map) {
     cumulativeProbability += entry.second.second;
 
     if (random < cumulativeProbability) {
@@ -49,20 +49,19 @@ std::string particle_Info::GetParticleType(double random) const {
 
 // Function to get the particle index (fIndex) based on the particle type
 int particle_Info::GetParticleFIndex(const std::string& particleType) const {
-  // Loop through the map to find the index associated with the particle type
-  for (const auto& entry : particleMap) {
+  for (const auto& entry : particle_Map) {
+    // Loop through the map to find the index associated with the particle type
     if (entry.second.first == particleType) {
       return entry.first;
     }
   }
 
-  // If no index is found, return -1 or another meaningful value
-  return -1;
+  return -1;  // o un altro valore significativo
 }
 
 // Function to set the particle index (fIndex) associated with a particle type
 void particle_Info::SetParticleFIndex(int fIndex,
                                       const std::string& particleType) {
   // Set the index associated with the particle type in the map
-  particleMap[fIndex].first = particleType;
+  particle_Map[fIndex].first = particleType;
 }
