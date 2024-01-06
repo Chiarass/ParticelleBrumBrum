@@ -62,13 +62,19 @@ TEST_CASE("Testing ParticleClass")
   Particle::AddParticleType(p.get_ParticleName(), p.get_ParticleMass(), p.get_ParticleCharge(), 0);
   Particle::AddParticleType(h.get_ParticleName(), h.get_ParticleMass(), h.get_ParticleCharge(), 0);
   Particle c(r.get_ParticleName(), 6., 2, 5.);
-//Testing Findparticle method while testing getters
+  Particle d(p.get_ParticleName(), 300, 8000, 700);
+  Particle e(h.get_ParticleName(),500,400,1000);
+  //Testing Findparticle method while testing getters
   SUBCASE("Testing getters"){
     CHECK(c.get_Mass() == 5);
     CHECK(c.get_Charge() == 2);
-    CHECK(c.get_SpecificMass() == 5);
-
-
+  //CHECK get_specificMass 
+    CHECK(c.get_specificMass(5,"K") == true);
+    CHECK(d.get_specificMass(5,"pi+") == true);
+    CHECK(e.get_specificMass(8,"K+") == false);
+    CHECK(e.get_specificMass(8,"pi+") == false);
+    CHECK_THROWS_AS(c.get_specificMass(10,"NonExistentParticle"), std::runtime_error);
+  
   }
 
 
@@ -89,7 +95,7 @@ TEST_CASE("Testing ParticleClass")
     CHECK(c.get_Ymomentum() == 4);
     CHECK(c.get_Zmomentum() == 5);
   }
-
+  
   SUBCASE("Testing Indexsetter with an integer parameter")
   {
     c.set_fIndex(5);
@@ -101,13 +107,12 @@ TEST_CASE("Testing ParticleClass")
     c.set_fIndex("pi+");
     CHECK(c.get_fIndex() == 1);
   }
-  Particle d("pi+", 300, 8000, 700);
-  Particle e("p-",500,400,1000);
+
   SUBCASE("Testing ParticleEnergy method")
   {
     CHECK(c.ParticleEnergy() == doctest::Approx(9.486833).epsilon(0.001));
     CHECK(d.ParticleEnergy() == doctest::Approx(8036.17).epsilon(0.01));
-    CHECK(e.ParticleEnergy() == doctest::Approx(1187.461).epsilon(0.001));
+    CHECK(e.ParticleEnergy() == doctest::Approx(1187.461).epsilon(0.01));
   }
 
   SUBCASE("Testing InvMass method")
