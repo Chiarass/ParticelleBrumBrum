@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <array>
 #include <cmath>
 #include <iostream>
@@ -87,7 +88,8 @@ void simulation() {
   constexpr double Particles{1e2};
   constexpr int N{120};
   int M = 100;
-  Particle *EventParticles[N];
+  std::array<Particle *, N> EventParticles{};
+  std::generate_n(EventParticles.begin(), M, []() { return new Particle(); });
   double phi;
   double theta;
   double p;

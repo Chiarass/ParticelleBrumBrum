@@ -20,7 +20,7 @@ int Particle::FindParticle(const char *Name) {
   // Loop through the particle types array to find the index
   for (int i = 0; i < fNParticleType; ++i) {
     if (strcasecmp(fParticleType[i]->get_ParticleName(), Name) == 0) {
-      std::cout << "FindParticle return /" << i << std::endl;
+      // std::cout << "FindParticle return /" << i << std::endl;
       return i;
     }
   }
@@ -79,8 +79,8 @@ void Particle::AddParticleType(const char *name, const double Mass,
     fParticleType[fNParticleType] =
         new ResonanceType(name, Mass, Charge, Width);
     ++fNParticleType;
-    std::cout << "Inserted particle /" << name << "in the array in pos. /"
-              << fNParticleType - 1;
+    // std::cout << "Inserted particle /" << name << "in the array in pos. /"
+    //  << fNParticleType - 1;
   } else {
     if (FindParticle(name) != -1 || fNParticleType >= fMaxNumParticleType) {
       std::cout << "The array is already full or the particle type already "
@@ -91,8 +91,8 @@ void Particle::AddParticleType(const char *name, const double Mass,
       fParticleType[fNParticleType] =
           new ResonanceType(name, Mass, Charge, Width);
       ++fNParticleType;
-      std::cout << "Inserted particle /" << name << "in the array in pos. /"
-                << fNParticleType - 1 << std::endl;
+      // std::cout << "Inserted particle /" << name << "in the array in pos. /"
+      // << fNParticleType - 1 << std::endl;
     };
   }
 }
@@ -114,7 +114,7 @@ double Particle::ParticleEnergy() const {
   }
   double const m = fParticleType[fIndex]->get_ParticleMass();
   double P = fPx * fPx + fPy * fPy + fPz * fPz;
-  std::cout << "ParticleEnergy: " << P << std::endl;
+  // std::cout << "ParticleEnergy: " << P << std::endl;
   return sqrt(m * m + P);
 }
 
@@ -161,14 +161,14 @@ void Particle::set_fIndex(int index) {
     return;
   } else {
     fIndex = index;
-    std::cout << "Setted index" << std::endl;
+    // std::cout << "Setted index" << std::endl;
   }
 }
 
 void Particle::set_fIndex(const char *pname) {
   // Set the particle index based on the particle name if it's found
   set_fIndex(FindParticle(pname));
-  std::cout << "findex is /" << fIndex;
+  // std::cout << "findex is /" << fIndex;
 }
 
 int Particle::Decay2body(Particle &dau1, Particle &dau2) const {
