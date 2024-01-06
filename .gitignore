@@ -2,3 +2,5 @@
 cmake-build-release
 cmake-build-debug
 build
+main/src/my_program
+main/src/simulations.root

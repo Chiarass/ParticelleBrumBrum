@@ -19,10 +19,11 @@
 #include "TRandom.h"
 #include "TRint.h"
 #include "TStyle.h"
+#include "TSystem.h"
 
 // Draw with Plain style in ROOT
 void SetStyle() {
-  gROOT->SetStyle(" Default ");
+  gROOT->SetStyle("Default");
   gStyle->SetOptStat(1122);
   gStyle->SetOptFit(1111);
   gStyle->SetPalette(57);
@@ -31,9 +32,9 @@ void SetStyle() {
 
 void analysis() {
   // Loading old ROOT File
-  TFile *file = new TFile("simulations-Root", "READ");
+  TFile *file = new TFile("simulations.root", "READ");
   // Creating ROOT File
-  TFile *file2 = new TFile("analysis-Root", "RECREATE");
+  TFile *file2 = new TFile("analysis.root", "RECREATE");
 
   // Reading histograms in ROOT File
   TH1F *h1 = (TH1F *)file->Get("HistoParticles");
@@ -355,7 +356,8 @@ void analysis() {
   c7->Write();
 
   // Saving Canvas in .pdf , . png and . jpg formats
-  c1->Print(" particleDistribution . pdf ");
+  c1->Print(" particleDistribution.pdf ");
+  c1->SaveAs("particleDistribution.pdf");
   c2->Print(" impulse .pdf ");
   c3->Print(" energy .pdf ");
   c4->Print(" invariantMass .pdf ");
@@ -376,12 +378,20 @@ void analysis() {
   c5->Print(" invariantMassDecay . jpg ");
   c6->Print(" decayParticleData1 . jpg ");
   c7->Print(" decayParticleData1 . jpg ");
+  // Verifica se il canvas è stato salvato correttamente
   file2->Close();
   file->Close();
+  if (gSystem->AccessPathName("particleDistribution.pdf") == 0) {
+    std::cout << "Il file particleDistribution.pdf è stato creato con successo."
+              << std::endl;
+  } else {
+    std::cerr << "Errore durante il salvataggio di particleDistribution.pdf."
+              << std::endl;  // Esce con codice di errore
+  }
 }
 
-/*// Add main in order to compile from SHELL
+// Add main in order to compile from SHELL
 int main() {
   analysis();
   return EXIT_SUCCESS;
-}*/
+}
