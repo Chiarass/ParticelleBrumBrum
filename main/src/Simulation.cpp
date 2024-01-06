@@ -230,8 +230,8 @@ void simulation() {
       }
     }
   }
-  for (int i = 0; i < N; ++i) {
-    delete EventParticles[i];
+  for (auto &element : EventParticles) {
+    delete element;
   }
   // Writing histo on TFile
   file->cd();

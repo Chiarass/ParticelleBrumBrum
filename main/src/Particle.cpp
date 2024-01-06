@@ -157,7 +157,7 @@ void Particle::ParticleStatus() {
 void Particle::set_fIndex(int index) {
   // Set the particle index
   if (index >= fNParticleType || index < 0) {
-    std ::cout << " Particle not found \n";
+    // std ::cout << " Particle not found \n";
     return;
   } else {
     fIndex = index;
@@ -204,7 +204,7 @@ int Particle::Decay2body(Particle &dau1, Particle &dau2) const {
     // Check if the total mass after decay is less than the sum of daughter
     // masses
     printf(
-        "Decayment cannot be performed because mass is too low in this "
+         "Decayment cannot be performed because mass is too low in this "
         "channel\n");
     return 2;
   }
