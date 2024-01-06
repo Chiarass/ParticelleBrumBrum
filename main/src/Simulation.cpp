@@ -84,12 +84,11 @@ void simulation() {
   HistoInvMass_dec->Sumw2();
 
   // Creating and initialiting variables
-  constexpr double Events{1e5};
-  constexpr double Particles{1e2};
+  constexpr int Events{100000};
+  constexpr int Particles{100};
   constexpr int N{120};
   int M = 100;
   std::array<Particle *, N> EventParticles{};
-  std::generate_n(EventParticles.begin(), M, []() { return new Particle(); });
   double phi;
   double theta;
   double p;
@@ -100,6 +99,7 @@ void simulation() {
   for (int i = 0; i < Events; i++) {
     // Reset M at the beginning of each event
     M = 100;
+    std::generate_n(EventParticles.begin(), M, []() { return new Particle(); });
 
     // Loop over particles in each event
     for (int j = 0; j < Particles; ++j) {
@@ -163,7 +163,6 @@ void simulation() {
           Particle Piminus = Particle("Pion-", 0.13957, -1, 0);
           EventParticles[M] = new Particle(Kplus);
           EventParticles[M + 1] = new Particle(Piminus);
-          --M;
           EventParticles[j]->Particle::Decay2body(*EventParticles[M],
                                                   *EventParticles[M + 1]);
           M = M + 2;
@@ -174,7 +173,6 @@ void simulation() {
           Particle Piplus = Particle("Pion+", 0.13957, +1, 0);
           EventParticles[M] = new Particle(Kminus);
           EventParticles[M + 1] = new Particle(Piplus);
-          --M;
           EventParticles[j]->Particle::Decay2body(*EventParticles[M],
                                                   *EventParticles[M + 1]);
           M = M + 2;
@@ -229,9 +227,9 @@ void simulation() {
         }
       }
     }
-  }
-  for (auto &element : EventParticles) {
-    delete element;
+    for (auto &element : EventParticles) {
+      delete element;
+    }
   }
   // Writing histo on TFile
   file->cd();
