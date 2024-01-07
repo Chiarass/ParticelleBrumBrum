@@ -204,7 +204,7 @@ int Particle::Decay2body(Particle &dau1, Particle &dau2) const {
     // Check if the total mass after decay is less than the sum of daughter
     // masses
     printf(
-         "Decayment cannot be performed because mass is too low in this "
+         "Decay cannot be performed because mass is too low in this "
         "channel\n");
     return 2;
   }

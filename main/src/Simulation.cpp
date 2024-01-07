@@ -7,6 +7,8 @@
 #include <cstdlib>
 #include <vector>
 
+#include <boost/stacktrace.hpp>
+
 #include "../include/Headers.hpp"
 #include "../include/Particle.hpp"
 #include "../include/ParticleType.hpp"
@@ -20,6 +22,7 @@
 #include "TRandom.h"
 #include "TRint.h"
 #include "TStyle.h"
+#include "TBenchmark.h"
 
 // Cosmetics
 void setStyle() {
@@ -75,7 +78,7 @@ void simulation() {
   constexpr int Particles(1e2);
   constexpr int N{120};
   int M = 100;
-  std::array<Particle *, N> EventParticles{};
+  std::array<std::shared_ptr<Particle>, N> EventParticles{};
   double phi;
   double theta;
   double p;
@@ -94,7 +97,7 @@ void simulation() {
   for (int i = 0; i < Events; i++) {
     // Reset M at the beginning of each event
     M = 100;
-    std::generate_n(EventParticles.begin(), M, []() { return new Particle(); });
+    std::generate_n(EventParticles.begin(), M, []() { return std::make_shared<Particle>(); });
 
     // Loop over particles in each event
     for (int j = 0; j < Particles; ++j) {
@@ -143,24 +146,15 @@ void simulation() {
         // Decay of K* particle
         yRAND = gRandom->Uniform(1);
         if (yRAND < 0.5) {
-          Particle Kplus = Particle("Kaon+", 0.49367, 1, 0);
-          Particle Piminus = Particle("Pion-", 0.13957, -1, 0);
-          EventParticles[M] = new Particle(Kplus);
-          EventParticles[M + 1] = new Particle(Piminus);
-          //          --M;
-          EventParticles[j]->Particle::Decay2body(*EventParticles[M], *EventParticles[M + 1]);
-          M = M + 2;
-          HistoInvMass_dec->Fill(EventParticles[M - 2]->InvMass(*EventParticles[M - 1]));
+          EventParticles[M] = std::make_shared<Particle>("Kaon+", 0.49367, 1, 0);
+          EventParticles[M + 1] = std::make_shared<Particle>("Pion-", 0.13957, -1, 0);
         } else {
-          Particle Kminus = Particle("Kaon-", 0.49367, -1, 0);
-          Particle Piplus = Particle("Pion+", 0.13957, +1, 0);
-          EventParticles[M] = new Particle(Kminus);
-          EventParticles[M + 1] = new Particle(Piplus);
-          //          --M;
-          EventParticles[j]->Particle::Decay2body(*EventParticles[M], *EventParticles[M + 1]);
-          M = M + 2;
-          HistoInvMass_dec->Fill(EventParticles[M - 2]->InvMass(*EventParticles[M - 1]));
+          EventParticles[M] = std::make_shared<Particle>("Kaon-", 0.49367, -1, 0);
+          EventParticles[M + 1] = std::make_shared<Particle>("Pion+", 0.13957, +1, 0);
         }
+        EventParticles[j]->Particle::Decay2body(*EventParticles[M], *EventParticles[M + 1]);
+        HistoInvMass_dec->Fill(EventParticles[M]->InvMass(*EventParticles[M + 1]));
+        M += 2;
       }
     }
 
@@ -216,9 +210,6 @@ void simulation() {
         }
       }
     }
-    for (int i = 0; i < M; ++i) {
-      delete EventParticles[i];
-    }
   }
   // Writing histo on TFile
   file->cd();
@@ -228,10 +219,13 @@ void simulation() {
 
 void exitLog() {
   std::cout << "exit by exit\n";
+  std::cout << boost::stacktrace::stacktrace();
 }
 
 // Add main in order to compile from SHELL
 int main() {
+  auto benchmark = TBenchmark();
+  benchmark.Start("Total");
   std::atexit(exitLog);
 
   setStyle();
@@ -243,6 +237,8 @@ int main() {
   } catch (...) {
     std::cout << "Error occurred\n";
   }
+
+  benchmark.Show("Total");
 
   return EXIT_SUCCESS;
 }

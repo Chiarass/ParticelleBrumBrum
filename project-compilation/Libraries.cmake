@@ -7,6 +7,8 @@ list(APPEND CMAKE_PREFIX_PATH ${CMAKE_SOURCE_DIR}/libraries)
 #find package section
 find_package(ROOT REQUIRED)
 
+find_package(Boost COMPONENTS REQUIRED)
+
 #link libraries defines
 #Define a set of libraries to be linked
 #Variables must have this structure: PROGRAM_LIBRARIES_<combination_name>
