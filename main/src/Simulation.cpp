@@ -1,8 +1,10 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
+#include <exception>
 #include <iostream>
 #include <memory>
+#include <cstdlib>
 #include <vector>
 
 #include "../include/Headers.hpp"
@@ -47,34 +49,19 @@ void simulation() {
   Particle::AddParticleType("Kaon*", 0.89166, 0, 0.050);
 
   // Define histograms for data analysis
-  TH1F *HistoParticles =
-      new TH1F("HistoParticles", "Particle type distribution", 7, 0, 7);
-  TH1F *HistoPolarAngle = new TH1F(
-      "HistoPolarAngles", "Polar angle distribution", 1e3, 0, TMath::Pi());
-  TH1F *HistoAzimuthalAngle =
-      new TH1F("HistoAzimuthalAngles", "Azimuthal angle distribution", 1e3, 0,
-               2 * TMath::Pi());
+  TH1F *HistoParticles = new TH1F("HistoParticles", "Particle type distribution", 7, 0, 7);
+  TH1F *HistoPolarAngle = new TH1F("HistoPolarAngles", "Polar angle distribution", 1e3, 0, TMath::Pi());
+  TH1F *HistoAzimuthalAngle = new TH1F("HistoAzimuthalAngles", "Azimuthal angle distribution", 1e3, 0, 2 * TMath::Pi());
   TH1F *HistoP = new TH1F("HistoP", "Linear momentum distribution", 500, 0, 10);
-  TH1F *HistoPTransversal =
-      new TH1F("HistoPTransversal",
-               "Transversal component of the linear momentum", 500, 0, 10);
-  TH1F *HistoEnergy =
-      new TH1F("HistoEnergy", "Energy distribution", 500, 0, 10);
-  TH1F *HistoInvMass_conc =
-      new TH1F("HistoInvMass_conc",
-               "Invariant Mass of concordant charge particles", 80, 0, 3);
-  TH1F *HistoInvMass_disc =
-      new TH1F("HistoInvMass_disc",
-               "Invariant Mass of discordant charge particles", 80, 0, 3);
-  TH1F *HistoInvMass_PionKaon_conc = new TH1F(
-      "HistoInvMass_PionKaon_conc",
-      "Invariant Mass of concordant Pions and Kaons particles", 150, 0, 3);
-  TH1F *HistoInvMass_PionKaon_disc = new TH1F(
-      "HistoInvMass_PionKaon_disc",
-      "Invariant Mass of discordant Pions and Kaons particles", 150, 0, 3);
-  TH1F *HistoInvMass_dec =
-      new TH1F("HistoInvMass_dec",
-               "Invariant Mass of Kaon* decay charge particles", 200, 0, 3);
+  TH1F *HistoPTransversal = new TH1F("HistoPTransversal", "Transversal component of the linear momentum", 500, 0, 10);
+  TH1F *HistoEnergy = new TH1F("HistoEnergy", "Energy distribution", 500, 0, 10);
+  TH1F *HistoInvMass_conc = new TH1F("HistoInvMass_conc", "Invariant Mass of concordant charge particles", 80, 0, 3);
+  TH1F *HistoInvMass_disc = new TH1F("HistoInvMass_disc", "Invariant Mass of discordant charge particles", 80, 0, 3);
+  TH1F *HistoInvMass_PionKaon_conc =
+      new TH1F("HistoInvMass_PionKaon_conc", "Invariant Mass of concordant Pions and Kaons particles", 150, 0, 3);
+  TH1F *HistoInvMass_PionKaon_disc =
+      new TH1F("HistoInvMass_PionKaon_disc", "Invariant Mass of discordant Pions and Kaons particles", 150, 0, 3);
+  TH1F *HistoInvMass_dec = new TH1F("HistoInvMass_dec", "Invariant Mass of Kaon* decay charge particles", 200, 0, 3);
 
   // Applying Sumw2() method on invariant mass histo
   HistoInvMass_conc->Sumw2();
@@ -84,8 +71,8 @@ void simulation() {
   HistoInvMass_dec->Sumw2();
 
   // Creating and initialiting variables
-  constexpr int Events{100000};
-  constexpr int Particles{100};
+  constexpr int Events(1e5);
+  constexpr int Particles(1e2);
   constexpr int N{120};
   int M = 100;
   std::array<Particle *, N> EventParticles{};
@@ -94,6 +81,14 @@ void simulation() {
   double p;
   double xRAND;
   double yRAND;
+
+  // Lambda function for converting polar to Cartesian coordinates
+  auto ConversionPoltoCart = [&HistoPTransversal, &EventParticles](double p, double theta, double phi, int j) {
+    EventParticles[j]->set_P(p * std::sin(theta) * std::cos(phi), p * std::sin(theta) * std::sin(phi),
+                             p * std::cos(theta));
+    HistoPTransversal->Fill(EventParticles[j]->get_Xmomentum() * EventParticles[j]->get_Xmomentum() +
+                            EventParticles[j]->get_Ymomentum() * EventParticles[j]->get_Ymomentum());
+  };
 
   // Loop over events
   for (int i = 0; i < Events; i++) {
@@ -113,18 +108,7 @@ void simulation() {
       HistoAzimuthalAngle->Fill(phi);
       HistoP->Fill(p);
 
-      // Lambda function for converting polar to Cartesian coordinates
-      auto ConversionPoltoCart = [HistoPTransversal, &EventParticles](
-                                     double p, double theta, double phi,
-                                     int j) {
-        EventParticles[j]->set_P(p * std::sin(theta) * std::cos(phi),
-                                 p * std::sin(theta) * std::sin(phi),
-                                 p * std::cos(theta));
-        HistoPTransversal->Fill(EventParticles[j]->get_Xmomentum() *
-                                    EventParticles[j]->get_Xmomentum() +
-                                EventParticles[j]->get_Ymomentum() *
-                                    EventParticles[j]->get_Ymomentum());
-      };
+      ConversionPoltoCart(p, theta, phi, j);
 
       // Particle generation based on probabilities
       if (xRAND < 0.4) {
@@ -163,21 +147,19 @@ void simulation() {
           Particle Piminus = Particle("Pion-", 0.13957, -1, 0);
           EventParticles[M] = new Particle(Kplus);
           EventParticles[M + 1] = new Particle(Piminus);
-          EventParticles[j]->Particle::Decay2body(*EventParticles[M],
-                                                  *EventParticles[M + 1]);
+          //          --M;
+          EventParticles[j]->Particle::Decay2body(*EventParticles[M], *EventParticles[M + 1]);
           M = M + 2;
-          HistoInvMass_dec->Fill(
-              EventParticles[M - 2]->InvMass(*EventParticles[M - 1]));
+          HistoInvMass_dec->Fill(EventParticles[M - 2]->InvMass(*EventParticles[M - 1]));
         } else {
           Particle Kminus = Particle("Kaon-", 0.49367, -1, 0);
           Particle Piplus = Particle("Pion+", 0.13957, +1, 0);
           EventParticles[M] = new Particle(Kminus);
           EventParticles[M + 1] = new Particle(Piplus);
-          EventParticles[j]->Particle::Decay2body(*EventParticles[M],
-                                                  *EventParticles[M + 1]);
+          //          --M;
+          EventParticles[j]->Particle::Decay2body(*EventParticles[M], *EventParticles[M + 1]);
           M = M + 2;
-          HistoInvMass_dec->Fill(
-              EventParticles[M - 2]->InvMass(*EventParticles[M - 1]));
+          HistoInvMass_dec->Fill(EventParticles[M - 2]->InvMass(*EventParticles[M - 1]));
         }
       }
     }
@@ -188,47 +170,54 @@ void simulation() {
     // Loop over particles in each event to calculate invariant masses
     for (int k = 0; k < M; ++k) {
       // Checking EventParticles to avoid segmentation fault
-      if (EventParticles[k] != nullptr) {
-        double charge1 = EventParticles[k]->get_Charge();
-        double mass1 = EventParticles[k]->get_Mass();
+      if (EventParticles[k] == nullptr) {
+        std::cout << "ERROR: nullptr found\n";
+        continue;  // TODO gestire l'errore
+      }
+      double charge1 = EventParticles[k]->get_Charge();
+      double mass1 = EventParticles[k]->get_Mass();
 
-        IMASS = 0.0;
-        if (charge1 != 0) {
-          // Nested loop to compare each particle with others for invariant mass
-          // calculation
-          for (int h = k + 1; h < M; ++h) {
-            double charge2 = EventParticles[h]->get_Charge();
-            double mass2 = EventParticles[h]->get_Mass();
+      IMASS = 0.0;
+      if (charge1 == 0) {
+        continue;  // era una K*
+      }
+      // Nested loop to compare each particle with others for invariant mass
+      // calculation
+      for (int h = k + 1; h < M; ++h) {
+        double charge2 = EventParticles[h]->get_Charge();
+        double mass2 = EventParticles[h]->get_Mass();
+        if (charge2 == 0) {
+          continue;  // era una K*
+        }
+        // Calculate invariant mass between two particles
+        if (EventParticles[h] == nullptr) {
+          std::cout << "ERROR: nullptr found\n";
+          continue;  // TODO gestire l'errore
+        }
+        IMASS = EventParticles[k]->InvMass(*EventParticles[h]);
 
-            if (charge2 != 0) {
-              // Calculate invariant mass between two particles
-              IMASS = EventParticles[k]->InvMass(*EventParticles[h]);
-
-              // Check for specific particle combinations and fill corresponding
-              // histograms
-              if ((EventParticles[h]->get_specificMass(mass2, "Kaon+") &&
-                   EventParticles[k]->get_specificMass(mass1, "Pion+")) ||
-                  (EventParticles[h]->get_specificMass(mass1, "Kaon+") &&
-                   EventParticles[k]->get_specificMass(mass2, "Pion+"))) {
-                if (charge1 * charge2 < 0) {
-                  HistoInvMass_PionKaon_disc->Fill(IMASS);
-                } else {
-                  HistoInvMass_PionKaon_conc->Fill(IMASS);
-                }
-              }
-
-              if (charge1 * charge2 < 0) {
-                HistoInvMass_disc->Fill(IMASS);
-              } else {
-                HistoInvMass_conc->Fill(IMASS);
-              }
-            }
+        // Check for specific particle combinations and fill corresponding
+        // histograms
+        if ((EventParticles[h]->get_specificMass(mass2, "Kaon+") &&
+             EventParticles[k]->get_specificMass(mass1, "Pion+")) ||
+            (EventParticles[h]->get_specificMass(mass1, "Kaon+") &&
+             EventParticles[k]->get_specificMass(mass2, "Pion+"))) {
+          if (charge1 * charge2 < 0) {
+            HistoInvMass_PionKaon_disc->Fill(IMASS);
+          } else {
+            HistoInvMass_PionKaon_conc->Fill(IMASS);
           }
+        }
+
+        if (charge1 * charge2 < 0) {
+          HistoInvMass_disc->Fill(IMASS);
+        } else {
+          HistoInvMass_conc->Fill(IMASS);
         }
       }
     }
-    for (auto &element : EventParticles) {
-      delete element;
+    for (int i = 0; i < M; ++i) {
+      delete EventParticles[i];
     }
   }
   // Writing histo on TFile
@@ -237,11 +226,23 @@ void simulation() {
   file->Close();
 }
 
+void exitLog() {
+  std::cout << "exit by exit\n";
+}
+
 // Add main in order to compile from SHELL
 int main() {
+  std::atexit(exitLog);
+
   setStyle();
 
-  simulation();
+  try {
+    simulation();
+  } catch (const std::exception &e) {
+    std::cout << e.what() << '\n';
+  } catch (...) {
+    std::cout << "Error occurred\n";
+  }
 
   return EXIT_SUCCESS;
 }
