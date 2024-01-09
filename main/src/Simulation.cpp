@@ -44,7 +44,7 @@ void simulation() {
   // Define particle types and their properties
   Particle::AddParticleType("Pion+", 0.13957, 1, 0.);
   Particle::AddParticleType("Pion-", 0.13957, -1, 0.);
-  Particle::AddParticleType("Kaon+", 0.49367, 1, 0.);
+  Particle::AddParticleType("Kaon+", 0.49367, +1, 0.);
   Particle::AddParticleType("Kaon-", 0.49367, -1, 0.);
   Particle::AddParticleType("Proton+", 0.93827, +1, 0.);
   Particle::AddParticleType("Proton-", 0.93827, -1, 0.);
@@ -64,7 +64,7 @@ void simulation() {
   TH1F *HistoInvMass_PionKaon_disc =
       new TH1F("HistoInvMass_PionKaon_disc", "Invariant Mass of discordant Pions and Kaons particles", 150, 0, 3);
   TH1F *HistoInvMass_dec = new TH1F("HistoInvMass_dec", "Invariant Mass of Kaon* decay charge particles", 200, 0, 3);
-
+  
   // Applying Sumw2() method on invariant mass histo
   HistoInvMass_conc->Sumw2();
   HistoInvMass_disc->Sumw2();

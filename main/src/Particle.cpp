@@ -76,10 +76,10 @@ void Particle::AddParticleType(const char *name, const double Mass, const int Ch
   } else {
     if (FindParticle(name) != -1 || fNParticleType >= fMaxNumParticleType) {
       std::cout << "The array is already full or the particle type already "
-                   "exists, sorry bro"
+                   "exists."
                 << std::endl;
     } else {
-      if (Width > 0) {  // Added particle
+      if (Width != 0) {  // Added particle
         fParticleType[fNParticleType] = new ResonanceType(name, Mass, Charge, Width);
         ++fNParticleType;
       } else {  // Added particle
@@ -119,7 +119,7 @@ double Particle::InvMass(Particle &p) {
   const double PY = fPy + p.get_Ymomentum();
   const double PZ = fPz + p.get_Zmomentum();
 
-  return sqrt((E1 + E2) * (E1 + E2) - (PX + PY + PZ) * (PX + PY + PZ));
+  return sqrt((E1 + E2) * (E1 + E2) - PX*PX-PY*PY-PZ*PZ);
 }
 
 // Set the momentum components of the particle

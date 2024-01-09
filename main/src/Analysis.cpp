@@ -27,7 +27,7 @@ void SetStyle() {
   gStyle->SetOptStat(1122);
   gStyle->SetOptFit(1111);
   gStyle->SetPalette(57);
-  gStyle->SetOptTitle(0);
+  gStyle->SetOptTitle(1);
 }
 
 void analysis() {
@@ -48,23 +48,22 @@ void analysis() {
   TH1F *h9 = (TH1F *)file->Get("HistoInvMass_PionKaon_conc");
   TH1F *h10 = (TH1F *)file->Get("HistoInvMass_PionKaon_disc");
   TH1F *h11 = (TH1F *)file->Get("HistoInvMass_dec");
-  // TH3F * h12 = ( TH3F *) file -> Get (" h12 ") ;
-
+ 
   // Creating Canvas
-  TCanvas *c1 = new TCanvas("c1", " Particle Distribution ", 200, 10, 900, 500);
+  TCanvas *c1 = new TCanvas("c1", "Particle Distribution", 200, 10, 900, 500);
   c1->Divide(2, 2);
-  TCanvas *c2 = new TCanvas("c2", " Impulse ", 200, 10, 900, 500);
+  TCanvas *c2 = new TCanvas("c2", "Impulse", 200, 10, 900, 500);
   c2->Divide(1, 2);
-  TCanvas *c3 = new TCanvas("c3", " Energy ", 200, 10, 900, 500);
-  TCanvas *c4 = new TCanvas("c4", " Invariant Mass ", 200, 10, 900, 500);
+  TCanvas *c3 = new TCanvas("c3", "Energy", 200, 10, 900, 500);
+  TCanvas *c4 = new TCanvas("c4", "Invariant Mass", 200, 10, 900, 500);
   c4->Divide(2, 2);
-  TCanvas *c5 = new TCanvas("c5", " Invariant Mass Decayed Particles ", 200, 10, 900, 500);
-  TCanvas *c6 = new TCanvas("c6", "1st Difference ", 200, 10, 900, 500);
-  TCanvas *c7 = new TCanvas("c7", "2nd Difference ", 200, 10, 900, 500);
+  TCanvas *c5 = new TCanvas("c5", "Invariant Mass Decayed Particles", 200, 10, 900, 500);
+  TCanvas *c6 = new TCanvas("c6", "1st Difference", 200, 10, 900, 500);
+  TCanvas *c7 = new TCanvas("c7", "2nd Difference", 200, 10, 900, 500);
 
   // Creating functions for fitting
-  TF1 *f1 = new TF1(" funiform1 ", " pol0 ", 0., 2 * TMath ::Pi());
-  TF1 *f2 = new TF1(" funiform2 ", " pol0 ", 0., TMath ::Pi());
+  TF1 *f1 = new TF1(" funiform1 ", " pol0 ", 0.,  TMath ::Pi());
+  TF1 *f2 = new TF1(" funiform2 ", " pol0 ", 0., 2 * TMath ::Pi());
   TF1 *f3 = new TF1(" fexpo ", " expo ", 0., 10.);
   TF1 *f4 = new TF1(" fgaus1 ", " gaus ", 0.3, 1.5);
   TF1 *f5 = new TF1(" fgaus2 ", " gaus ", 0.6, 1.2);
@@ -74,8 +73,8 @@ void analysis() {
   TH1F *hDiff1 = new TH1F(*h8);
   TH1F *hDiff2 = new TH1F(*h10);
 
-  hDiff1->SetTitle("Difference between particles with concordand / discordant charge");
-  hDiff2->SetTitle(" Difference between concordant / discordant decayed particles ");
+  hDiff1->SetTitle("Difference between invariant mass of particles with discordant and concordant charge");
+  hDiff2->SetTitle("Difference between invariant mass of discordant and concordant Pion-Kaon pairs");
   hDiff1->Add(h8, h7, 1, -1);
   hDiff2->Add(h10, h9, 1, -1);
   // Creating array that contains all TH1F histograms
@@ -206,19 +205,6 @@ void analysis() {
     h->DrawCopy("E,P, SAME ");
   });
 
-  // Drawing 3D angle distribution
-  /*c1->cd(4);
-  h12->SetMarkerColor(kBlue + 4);
-  h12->GetXaxis()->SetTitleOffset(1.5);
-  h12->GetYaxis()->SetTitleOffset(1.5);
-  h12->GetZaxis()->SetTitleOffset(1.2);
-  h12->GetXaxis()->SetTitleSize(0.04);
-  h12->GetYaxis()->SetTitleSize(0.04);
-  h12->GetZaxis()->SetTitleSize(0.04);
-  h12->GetXaxis()->SetTitle("x- density ");
-  h12->GetYaxis()->SetTitle("y- density ");
-  h12->GetZaxis()->SetTitle("z- density ");
-  h12->DrawCopy();*/
 
   // Printing name and entries for all histograms
   std::for_each(histos.begin(), histos.end(), [&](TH1F *h) {
@@ -289,20 +275,7 @@ void analysis() {
             << "\n\u03c7 ^2/ NDF polar angle fit :" << f2->GetChisquare() / f2->GetNDF() << std::left << std::setw(35)
             << "\n\u03c7 ^2 probability polar angle fit :" << f2->GetProb() << '\n';
 
-  // 3D impulse
-  /*cout << "\n3D impulse fit :" << ’\n’ << f3->GetParName(0) << left <<
-  setw(24)
-       << ’:’ << f3->GetParameter(0) 307 << " \ u00b1 " << f3 -
-      > GetParError(0) << ’\n’ 308 << f3->GetParName(1) << left << setw(29)
-                       << ’:’ << f3->GetParameter(1) 309 << " \ u00b1 " << f3 -
-      > GetParError(1) << left << setw(34) 310
-                       << "\n\ u03c7 ^2/ NDF 3D impulse fit :"
-                       << f3->GetChisquare() / f3->GetNDF() 311 << left
-                       << setw(34) 312
-                       << "\n\ u03c7 ^2 probability 3d impulse fit :"
-                       << f3->GetProb() << ’\n’;
-  313 314  // K* 1st difference
-          315 */
+
   std::cout << '\n'
             << f4->GetParName(1) << std::left << std::setw(30) << " =" << f4->GetParameter(1) << " \u00b1 "
             << f4->GetParError(1) << '\n'
@@ -335,28 +308,29 @@ void analysis() {
   c7->Write();
 
   // Saving Canvas in .pdf , . png and . jpg formats
-  c1->Print(" particleDistribution.pdf ");
+  c1->Print("particleDistribution.pdf ");
   c1->SaveAs("particleDistribution.pdf");
-  c2->Print(" impulse .pdf ");
-  c3->Print(" energy .pdf ");
-  c4->Print(" invariantMass .pdf ");
-  c5->Print(" invariantMassDecay . pdf ");
-  c6->Print(" decayParticleData1 . pdf ");
-  c7->Print(" decayParticleData1 . pdf ");
-  c1->Print(" particleDistribution . png ");
-  c2->Print(" impulse .png ");
-  c3->Print(" energy .png ");
-  c4->Print(" invariantMass .png ");
-  c5->Print(" invariantMassDecay . png ");
-  c6->Print(" decayParticleData1 . png ");
-  c7->Print(" decayParticleData1 . png ");
-  c1->Print(" particleDistribution . jpg ");
-  c2->Print(" impulse .jpg ");
-  c3->Print(" energy .jpg ");
-  c4->Print(" invariantMass .jpg ");
-  c5->Print(" invariantMassDecay . jpg ");
-  c6->Print(" decayParticleData1 . jpg ");
-  c7->Print(" decayParticleData1 . jpg ");
+  c2->Print("impulse.pdf");
+  c3->Print("energy.pdf");
+  c4->Print("invariantMass.pdf");
+  c5->Print("invariantMassDecay.pdf");
+  c6->Print("decayParticleData1.pdf");
+  c7->Print("decayParticleData1.pdf");
+  c1->Print("particleDistribution.png");
+  c2->Print("impulse.png");
+  c3->Print("energy.png");
+  c4->Print("invariantMass.png");
+  c5->Print("invariantMassDecay.png");
+  c6->Print("decayParticleData1.png");
+  c7->Print("decayParticleData1.png");
+  c1->Print("particleDistribution.jpg");
+  c2->Print("impulse.jpg");
+  c3->Print("energy.jpg");
+  c4->Print("invariantMass.jpg");
+  c5->Print("invariantMassDecay.jpg");
+  c6->Print("decayParticleData1.jpg");
+  c7->Print("decayParticleData1.jpg");
+  
   // Verifica se il canvas è stato salvato correttamente
   file2->Close();
   file->Close();
@@ -369,7 +343,7 @@ void analysis() {
 }
 
 // Add main in order to compile from SHELL
-int main() {
+int main2() {
   analysis();
   return EXIT_SUCCESS;
 }
