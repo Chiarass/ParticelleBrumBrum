@@ -2,10 +2,14 @@
 
 include_guard(DIRECTORY)
 
-list(APPEND CMAKE_PREFIX_PATH ${CMAKE_SOURCE_DIR}/libraries)
+list(APPEND CMAKE_PREFIX_PATH "/home/chiara/root")
+list(APPEND CMAKE_LIBRARY_PATH "/home/chiara/root//lib")
 
 #find package section
+list(APPEND CMAKE_MODULE_PATH "/home/chiara/root/6.26.06/lib/cmake/root")
 find_package(ROOT REQUIRED)
+
+#find_package(Boost COMPONENTS REQUIRED)
 
 #link libraries defines
 #Define a set of libraries to be linked

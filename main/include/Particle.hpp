@@ -1,18 +1,17 @@
 #ifndef PARTICLE_HPP
 #define PARTICLE_HPP
+
 #include <array>
 #include <cmath>
 #include <iostream>
+#include <string>
 
 #include "ParticleType.hpp"
 #include "ResonanceType.hpp"
 
 class Particle {
  private:
-  ParticleType particletype;
-  ResonanceType resonancetype;
-
-  const char *f_Name = particletype.get_ParticleName();
+  const char *f_Name;
   static const int fMaxNumParticleType = 10;
   static ParticleType *fParticleType[fMaxNumParticleType];
   static int fNParticleType;
@@ -28,28 +27,38 @@ class Particle {
   void Boost(double bx, double by, double bz);
 
  public:
-  Particle(const char *, int, double, double, double);
+  // Constructors
+  Particle();
+  Particle(const char *, double, double, double);
 
+  // Getter methods
   int get_fIndex();
+  double get_Xmomentum() const;
+  double get_Ymomentum() const;
+  double get_Zmomentum() const;
+  double get_Mass() const;
+  double get_Charge() const;
+  bool get_specificMass(double, const char *) const;
 
-  double const get_Xmomentum();
-  double const get_Ymomentum();
-  double const get_Zmomentum();
-  double get_Mass() const ;
-
+  // Setter methods
   void set_fIndex(int index);
   void set_fIndex(const char *pname);
+  void set_ParticleTypeFromMap(const std::string &particleType);
   void set_P(double px, double py, double pz);
 
-  double const ParticleEnergy();
+  // Other methods
+  double ParticleEnergy() const;
   double InvMass(Particle &p);
 
-  void ArrayStatus();  // può essere statico? non lo so
+  // Static methods
+  static void ArrayStatus();
   void ParticleStatus();
 
-  static void AddParticleType(const char *, const double, const int,
-                              const double);
-  static void DeallocateMemory();
+  // Static methods for particle type management
+  static void AddParticleType(const char *, const double, const int, const double);
+
+  // Decay method
   int Decay2body(Particle &dau1, Particle &dau2) const;
 };
+
 #endif
