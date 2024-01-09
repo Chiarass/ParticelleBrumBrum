@@ -5,7 +5,7 @@ This project wants to simulate a detector observing the traces of the following 
 1. Pion (with associated antiparticle)
 2. Kaon (with associated antiparticle)
 3. Proton (with associated antiparticle)
----
+
 It also simulates the decay and resonance phenomenons of neutral Kaons by turning it into decay products. In order to start the program, please follow the instructions below.
 ----
 In order to run it you need ROOT and a GUI on you terminal (You can install MobaXTerm). You also have to specify your ROOT path in Libraries.cmake file
