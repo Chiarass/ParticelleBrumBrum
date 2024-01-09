@@ -7,9 +7,9 @@ This project wants to simulate a detector observing the traces of the following 
 3. Proton (with associated antiparticle)
 ---
 It also simulates the decay and resonance phenomenons of neutral Kaons by turning it into decay products. In order to start the program, please follow the instructions below.
----
+----
 In order to run it you need ROOT and a GUI on you terminal (You can install MobaXTerm). You also have to specify your ROOT path in Libraries.cmake file
----
+----
 **The program uses doctest.h and CMake to test/compile/debug/run. Actually on my pc CMake doesn't get to write/read .root files and I had to load manually libreries on root terminal. instructions for both ways are written below.**
 
 To run the program in shell by using CMake (not recommended, your editor has easy buttons):
@@ -41,6 +41,7 @@ To not build the test, set:
 ```
 -DBUILD_TESTING=False
 ```
+----
 One can also build in release mode for better performance.
 ----
 To run the program by using CMake and your editor (pay attention as I said):

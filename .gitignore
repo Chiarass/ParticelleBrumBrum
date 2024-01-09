@@ -4,3 +4,5 @@ cmake-build-debug
 build
 main/src/my_program
 main/src/simulations.root
+main/src/analysis.root
+tests/unit/testing/tests.t

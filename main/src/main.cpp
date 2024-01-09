@@ -19,7 +19,7 @@
 #include "TStyle.h"
 
 // Adding main for shell compilation
-int main(int argc, char **argv) {
+int main3(int argc, char **argv) {
 // Object ownership setup
 #ifdef PROGRAM_USE_LOCAL_OWNERSHIP
   // Disable automatic ownership transfer to ROOT directories
