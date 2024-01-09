@@ -10,11 +10,10 @@ class ResonanceType : public ParticleType {
  public:
   // Constructors
   ResonanceType();
-  ResonanceType(const char* parName, const double parMass, const int parCharge,
-                const double resWidth);
+  ResonanceType(const char* parName, const double parMass, const int parCharge, const double resWidth);
 
   // Method to retrieve the width of the resonance
-  virtual double get_ResonanceWidth() const;
+  virtual double get_ParticleWidth() const override;
 
   // Method to print information about the resonance
   virtual void print() override;

@@ -1,11 +1,14 @@
 #include "../include/Particle.hpp"
 
+#include <algorithm>
 #include <array>
 #include <cmath>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
+#include <memory>
 #include <stdexcept>
+#include <vector>
 
 #include "../include/ParticleType.hpp"
 #include "../include/ResonanceType.hpp"
@@ -26,8 +29,7 @@ int Particle::FindParticle(const char *Name) {
   }
 
   // If no correspondence is found, print a message and return -1
-  std::cout << "No correspondence found for particle type: " << Name
-            << std::endl;
+  std::cout << "No correspondence found for particle type: " << Name << std::endl;
   return -1;
 }
 
@@ -37,11 +39,7 @@ Particle::Particle() : fIndex(-1){};
 // Parameterized constructor with particle name, momentum components
 // (defaulted to 0)
 Particle::Particle(const char *parName, double Px, double Py, double Pz)
-    : f_Name(parName),
-      fIndex(FindParticle(parName)),
-      fPx(Px = 0),
-      fPy(Py = 0),
-      fPz(Pz = 0){};
+    : f_Name(parName), fIndex(FindParticle(parName)), fPx(Px = 0), fPy(Py = 0), fPz(Pz = 0){};
 
 // Getters for momentum components
 double Particle::get_Xmomentum() const { return fPx; }
@@ -49,14 +47,10 @@ double Particle::get_Ymomentum() const { return fPy; }
 double Particle::get_Zmomentum() const { return fPz; }
 
 // Getter for particle mass using the particle type
-double Particle::get_Mass() const {
-  return fParticleType[fIndex]->get_ParticleMass();
-}
+double Particle::get_Mass() const { return fParticleType[fIndex]->get_ParticleMass(); }
 
 // Getter for particle charge using the particle type
-double Particle::get_Charge() const {
-  return fParticleType[fIndex]->get_ParticleCharge();
-}
+double Particle::get_Charge() const { return fParticleType[fIndex]->get_ParticleCharge(); }
 
 // Check if a particle has a specific mass and type
 bool Particle::get_specificMass(double mass, const char *name) const {
@@ -72,12 +66,10 @@ bool Particle::get_specificMass(double mass, const char *name) const {
   }
 }
 
-void Particle::AddParticleType(const char *name, const double Mass,
-                               const int Charge, const double Width) {
+void Particle::AddParticleType(const char *name, const double Mass, const int Charge, const double Width) {
   // Verifica se il tipo di particella esiste già
   if (fNParticleType == 0) {  // Added particle
-    fParticleType[fNParticleType] =
-        new ResonanceType(name, Mass, Charge, Width);
+    fParticleType[fNParticleType] = new ResonanceType(name, Mass, Charge, Width);
     ++fNParticleType;
     // std::cout << "Inserted particle /" << name << "in the array in pos. /"
     //  << fNParticleType - 1;
@@ -87,12 +79,13 @@ void Particle::AddParticleType(const char *name, const double Mass,
                    "exists, sorry bro"
                 << std::endl;
     } else {
-      // Added particle
-      fParticleType[fNParticleType] =
-          new ResonanceType(name, Mass, Charge, Width);
-      ++fNParticleType;
-      // std::cout << "Inserted particle /" << name << "in the array in pos. /"
-      // << fNParticleType - 1 << std::endl;
+      if (Width > 0) {  // Added particle
+        fParticleType[fNParticleType] = new ResonanceType(name, Mass, Charge, Width);
+        ++fNParticleType;
+      } else {  // Added particle
+        fParticleType[fNParticleType] = new ParticleType(name, Mass, Charge);
+        ++fNParticleType;
+      }
     };
   }
 }
@@ -139,8 +132,7 @@ void Particle::set_P(double px, double py, double pz) {
 // Print the status of all particle types
 void Particle::ArrayStatus() {
   for (int i = 0; i < fNParticleType; ++i) {
-    ParticleType p = *fParticleType[i];
-    p.print();
+    fParticleType[i]->print();
     std::cout << std::endl;
   }
 }
@@ -150,8 +142,7 @@ void Particle::ParticleStatus() {
   std::cout << "Particle code: " << get_fIndex() << std::endl;
   std::cout << "Name: " << f_Name << std::endl;
   std::cout << "Momentum: "
-            << "(" << get_Xmomentum() << ", " << get_Ymomentum() << " ,"
-            << get_Zmomentum() << ")" << std::endl;
+            << "(" << get_Xmomentum() << ", " << get_Ymomentum() << " ," << get_Zmomentum() << ")" << std::endl;
 }
 
 void Particle::set_fIndex(int index) {
@@ -204,18 +195,16 @@ int Particle::Decay2body(Particle &dau1, Particle &dau2) const {
     // Check if the total mass after decay is less than the sum of daughter
     // masses
     printf(
-         "Decay cannot be performed because mass is too low in this "
+        "Decay cannot be performed because mass is too low in this "
         "channel\n");
     return 2;
   }
 
   // Calculate the magnitude of the momentum of the daughters in the
   // center-of-mass frame
-  double pout =
-      sqrt(
-          (massMot * massMot - (massDau1 + massDau2) * (massDau1 + massDau2)) *
-          (massMot * massMot - (massDau1 - massDau2) * (massDau1 - massDau2))) /
-      massMot * 0.5;
+  double pout = sqrt((massMot * massMot - (massDau1 + massDau2) * (massDau1 + massDau2)) *
+                     (massMot * massMot - (massDau1 - massDau2) * (massDau1 - massDau2))) /
+                massMot * 0.5;
 
   // Generate random angles for the direction of the daughters
   double norm = 2 * M_PI / RAND_MAX;
@@ -224,10 +213,8 @@ int Particle::Decay2body(Particle &dau1, Particle &dau2) const {
 
   // Set the momentum of the daughters based on the random angles and
   // calculated magnitude
-  dau1.set_P(pout * sin(theta) * cos(phi), pout * sin(theta) * sin(phi),
-             pout * cos(theta));
-  dau2.set_P(-pout * sin(theta) * cos(phi), -pout * sin(theta) * sin(phi),
-             -pout * cos(theta));
+  dau1.set_P(pout * sin(theta) * cos(phi), pout * sin(theta) * sin(phi), pout * cos(theta));
+  dau2.set_P(-pout * sin(theta) * cos(phi), -pout * sin(theta) * sin(phi), -pout * cos(theta));
 
   // Calculate the energy of the parent particle
   double energy = sqrt(fPx * fPx + fPy * fPy + fPz * fPz + massMot * massMot);

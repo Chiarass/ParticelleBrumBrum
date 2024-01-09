@@ -55,8 +55,7 @@ class Particle {
   void ParticleStatus();
 
   // Static methods for particle type management
-  static void AddParticleType(const char *, const double, const int,
-                              const double);
+  static void AddParticleType(const char *, const double, const int, const double);
 
   // Decay method
   int Decay2body(Particle &dau1, Particle &dau2) const;

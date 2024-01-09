@@ -7,12 +7,11 @@ ResonanceType::ResonanceType() : fWidth(0.0){};
 
 // Parameterized constructor for ResonanceType, invoking the base class
 // constructor
-ResonanceType::ResonanceType(const char *parName, const double parMass,
-                             const int parCharge, const double resWidth)
+ResonanceType::ResonanceType(const char *parName, const double parMass, const int parCharge, const double resWidth)
     : ParticleType(parName, parMass, parCharge), fWidth(resWidth){};
 
 // Getter function for the resonance width
-double ResonanceType::get_ResonanceWidth() const { return fWidth; };
+double ResonanceType::get_ParticleWidth() const { return fWidth; };
 
 // Print function to display information about the ResonanceType
 void ResonanceType::print() {
@@ -21,5 +20,5 @@ void ResonanceType::print() {
 
   // Display additional information specific to ResonanceType (resonance width)
   std::cout << ", "
-            << "Resonance Width: " << ResonanceType::get_ResonanceWidth();
+            << "Resonance Width: " << ResonanceType::get_ParticleWidth();
 }

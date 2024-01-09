@@ -32,14 +32,14 @@ void SetStyle() {
 
 void analysis() {
   // Loading old ROOT File
-  TFile *file = new TFile("simulations.root", "READ");
+  TFile *file = new TFile("/home/chiara/lab_2/main/simulations.root", "READ");
   // Creating ROOT File
-  TFile *file2 = new TFile("analysis.root", "RECREATE");
+  TFile *file2 = new TFile("/home/chiara/lab_2/main/analysis.root", "RECREATE");
 
   // Reading histograms in ROOT File
   TH1F *h1 = (TH1F *)file->Get("HistoParticles");
-  TH1F *h2 = (TH1F *)file->Get("HistoPolarAngle");
-  TH1F *h3 = (TH1F *)file->Get("HistoAzimuthalAngle");
+  TH1F *h2 = (TH1F *)file->Get("HistoPolarAngles");
+  TH1F *h3 = (TH1F *)file->Get("HistoAzimuthalAngles");
   TH1F *h4 = (TH1F *)file->Get("HistoP");
   TH1F *h5 = (TH1F *)file->Get("HistoPTransversal");
   TH1F *h6 = (TH1F *)file->Get("HistoEnergy");
@@ -58,8 +58,7 @@ void analysis() {
   TCanvas *c3 = new TCanvas("c3", " Energy ", 200, 10, 900, 500);
   TCanvas *c4 = new TCanvas("c4", " Invariant Mass ", 200, 10, 900, 500);
   c4->Divide(2, 2);
-  TCanvas *c5 = new TCanvas("c5", " Invariant Mass Decayed Particles ", 200, 10,
-                            900, 500);
+  TCanvas *c5 = new TCanvas("c5", " Invariant Mass Decayed Particles ", 200, 10, 900, 500);
   TCanvas *c6 = new TCanvas("c6", "1st Difference ", 200, 10, 900, 500);
   TCanvas *c7 = new TCanvas("c7", "2nd Difference ", 200, 10, 900, 500);
 
@@ -72,18 +71,15 @@ void analysis() {
   TF1 *f6 = new TF1(" fgaus3 ", " gaus ", 0.6, 1.2);
 
   // Creating histograms of differences using copy constructor
-  TH1F *hDiff1 = new TH1F(*h7);
-  TH1F *hDiff2 = new TH1F(*h9);
+  TH1F *hDiff1 = new TH1F(*h8);
+  TH1F *hDiff2 = new TH1F(*h10);
 
-  hDiff1->SetTitle(
-      "Difference between particles with concordand / discordant charge");
-  hDiff2->SetTitle(
-      " Difference between concordant / discordant decayed particles ");
-  hDiff1->Add(h7, h8, 1, -1);
-  hDiff2->Add(h9, h10, 1, -1);
+  hDiff1->SetTitle("Difference between particles with concordand / discordant charge");
+  hDiff2->SetTitle(" Difference between concordant / discordant decayed particles ");
+  hDiff1->Add(h8, h7, 1, -1);
+  hDiff2->Add(h10, h9, 1, -1);
   // Creating array that contains all TH1F histograms
-  std::array<TH1F *, 13> histos{h1, h2, h3,  h4,  h5,     h6,    h7,
-                                h8, h9, h10, h11, hDiff1, hDiff2};
+  std::array<TH1F *, 13> histos{h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11, hDiff1, hDiff2};
 
   // Setting parameters
   double const kMass{0.89166};
@@ -135,8 +131,7 @@ void analysis() {
   hDiff2->Fit(" fgaus2 ", "BQR ");
 
   // Native array of particles ’name
-  const char *label[7]{"Pion+",   "Pion-",   "Kaon+", "Kaon-",
-                       "Proton+", "Proton-", " Kaon*"};
+  const char *label[7]{"Pion+", "Pion-", "Kaon+", "Kaon-", "Proton+", "Proton-", " Kaon*"};
 
   // Drawing histograms on Canvas
   std::for_each(histos.begin(), histos.end(), [&](TH1F *h) {
@@ -227,18 +222,14 @@ void analysis() {
 
   // Printing name and entries for all histograms
   std::for_each(histos.begin(), histos.end(), [&](TH1F *h) {
-    std::cout << std::left << std::setw(10) << "\nName :" << h->GetTitle()
-              << std::left << std::setw(10) << "\nEntries :" << h->Integral()
-              << '\n';
+    std::cout << std::left << std::setw(10) << "\nName :" << h->GetTitle() << std::left << std::setw(10)
+              << "\nEntries :" << h->Integral() << '\n';
     if (h == h1) {
       for (int i{1}; i != h->GetNbinsX() + 1; ++i) {
-        std::cout << "\n\u0025 of " << label[i - 1] << std::left
-                  << std::setw(10) << " generated : "
-                  << (h->GetBinContent(i) / h->GetEntries()) * 100.
-                  << "\u0025\n"
-                  << label[i - 1] << " in " << i << std::left << std::setw(12)
-                  << " bin :" << h->GetBinContent(i) << " \u00b1 "
-                  << h->GetBinError(i) << '\n';
+        std::cout << "\n\u0025 of " << label[i - 1] << std::left << std::setw(10)
+                  << " generated : " << (h->GetBinContent(i) / h->GetEntries()) * 100. << "\u0025\n"
+                  << label[i - 1] << " in " << i << std::left << std::setw(12) << " bin :" << h->GetBinContent(i)
+                  << " \u00b1 " << h->GetBinError(i) << '\n';
       }
     }
   });
@@ -285,24 +276,18 @@ void analysis() {
 
   // Azimuthal angle
   std::cout << "\nAzimuthal angle fit :" << '\n'
-            << f1->GetParName(0) << std::left << std::setw(29) << ':'
-            << f1->GetParameter(0) << " \u00b1 " << f1->GetParError(0)
-            << std::left << std::setw(39)
-            << "\n\u03c7 ^2/ NDF azimuthal angle fit :"
-            << f1->GetChisquare() / f1->GetNDF() << std::left << std::setw(39)
-            << "\n\u03c7 ^2 probability azimuthal angle fit :" << f1->GetProb()
-            << '\n';
+            << f1->GetParName(0) << std::left << std::setw(29) << ':' << f1->GetParameter(0) << " \u00b1 "
+            << f1->GetParError(0) << std::left << std::setw(39)
+            << "\n\u03c7 ^2/ NDF azimuthal angle fit :" << f1->GetChisquare() / f1->GetNDF() << std::left
+            << std::setw(39) << "\n\u03c7 ^2 probability azimuthal angle fit :" << f1->GetProb() << '\n';
 
   // Polar angle
   std::cout << "\nPolar angle fit :" << '\n'
-            << f2->GetParName(0) << std::left << std::setw(25) << ':'
-            << f2->GetParameter(0) << " \u00b1 " << f2->GetParError(0)
-            << std::left << std::setw(35)
+            << f2->GetParName(0) << std::left << std::setw(25) << ':' << f2->GetParameter(0) << " \u00b1 "
+            << f2->GetParError(0) << std::left << std::setw(35)
 
-            << "\n\u03c7 ^2/ NDF polar angle fit :"
-            << f2->GetChisquare() / f2->GetNDF() << std::left << std::setw(35)
-            << "\n\u03c7 ^2 probability polar angle fit :" << f2->GetProb()
-            << '\n';
+            << "\n\u03c7 ^2/ NDF polar angle fit :" << f2->GetChisquare() / f2->GetNDF() << std::left << std::setw(35)
+            << "\n\u03c7 ^2 probability polar angle fit :" << f2->GetProb() << '\n';
 
   // 3D impulse
   /*cout << "\n3D impulse fit :" << ’\n’ << f3->GetParName(0) << left <<
@@ -319,31 +304,25 @@ void analysis() {
   313 314  // K* 1st difference
           315 */
   std::cout << '\n'
-            << f4->GetParName(1) << std::left << std::setw(30) << " ="
-            << f4->GetParameter(1) << " \u00b1 " << f4->GetParError(1) << '\n'
-            << f4->GetParName(2) << std::left << std::setw(29) << " ="
-            << f4->GetParameter(2) << " \u00b1 " << f4->GetParError(2) << '\n'
-            << f4->GetParName(0) << std::left << std::setw(28) << " ="
-            << f4->GetParameter(0) << " \u00b1 " << f4->GetParError(0)
-            << std::left << std::setw(38)
-            << "\n\u03c7 ^2/ NDF 1st difference fit :"
-            << f4->GetChisquare() / f4->GetNDF() << std::left << std::setw(38)
-            << "\n\u03c7 ^2 probability 1st difference fit :" << f4->GetProb()
-            << '\n';
+            << f4->GetParName(1) << std::left << std::setw(30) << " =" << f4->GetParameter(1) << " \u00b1 "
+            << f4->GetParError(1) << '\n'
+            << f4->GetParName(2) << std::left << std::setw(29) << " =" << f4->GetParameter(2) << " \u00b1 "
+            << f4->GetParError(2) << '\n'
+            << f4->GetParName(0) << std::left << std::setw(28) << " =" << f4->GetParameter(0) << " \u00b1 "
+            << f4->GetParError(0) << std::left << std::setw(38)
+            << "\n\u03c7 ^2/ NDF 1st difference fit :" << f4->GetChisquare() / f4->GetNDF() << std::left
+            << std::setw(38) << "\n\u03c7 ^2 probability 1st difference fit :" << f4->GetProb() << '\n';
 
   // K* 2nd difference
   std::cout << '\n'
-            << f5->GetParName(1) << std::left << std::setw(30) << " ="
-            << f5->GetParameter(1) << " \u00b1 " << f5->GetParError(1) << '\n'
-            << f5->GetParName(2) << std::left << std::setw(29) << " ="
-            << f5->GetParameter(2) << " \u00b1 " << f5->GetParError(2) << '\n'
-            << f5->GetParName(0) << std::left << std::setw(28) << " ="
-            << f5->GetParameter(0) << " \u00b1 " << f5->GetParError(0)
-            << std::left << std::setw(38)
-            << "\n\u03c7 ^2/ NDF 2st difference fit :"
-            << f5->GetChisquare() / f5->GetNDF() << std::left << std::setw(38)
-            << "\n\u03c7 ^2 probability 2nd difference fit :" << f5->GetProb()
-            << "\n\n";
+            << f5->GetParName(1) << std::left << std::setw(30) << " =" << f5->GetParameter(1) << " \u00b1 "
+            << f5->GetParError(1) << '\n'
+            << f5->GetParName(2) << std::left << std::setw(29) << " =" << f5->GetParameter(2) << " \u00b1 "
+            << f5->GetParError(2) << '\n'
+            << f5->GetParName(0) << std::left << std::setw(28) << " =" << f5->GetParameter(0) << " \u00b1 "
+            << f5->GetParError(0) << std::left << std::setw(38)
+            << "\n\u03c7 ^2/ NDF 2st difference fit :" << f5->GetChisquare() / f5->GetNDF() << std::left
+            << std::setw(38) << "\n\u03c7 ^2 probability 2nd difference fit :" << f5->GetProb() << "\n\n";
 
   // Writing on new TFile
   file2->cd();
@@ -382,8 +361,7 @@ void analysis() {
   file2->Close();
   file->Close();
   if (gSystem->AccessPathName("particleDistribution.pdf") == 0) {
-    std::cout << "Il file particleDistribution.pdf è stato creato con successo."
-              << std::endl;
+    std::cout << "Il file particleDistribution.pdf è stato creato con successo." << std::endl;
   } else {
     std::cerr << "Errore durante il salvataggio di particleDistribution.pdf."
               << std::endl;  // Esce con codice di errore

@@ -1,19 +1,19 @@
 #include <algorithm>
 #include <array>
+// #include <boost/stacktrace.hpp>
 #include <cmath>
+#include <cstdlib>
 #include <exception>
 #include <iostream>
 #include <memory>
-#include <cstdlib>
 #include <vector>
-
-#include <boost/stacktrace.hpp>
 
 #include "../include/Headers.hpp"
 #include "../include/Particle.hpp"
 #include "../include/ParticleType.hpp"
 #include "../include/ResonanceType.hpp"
 #include "TApplication.h"
+#include "TBenchmark.h"
 #include "TDirectory.h"
 #include "TFile.h"
 #include "TH1F.h"
@@ -22,7 +22,6 @@
 #include "TRandom.h"
 #include "TRint.h"
 #include "TStyle.h"
-#include "TBenchmark.h"
 
 // Cosmetics
 void setStyle() {
@@ -40,7 +39,7 @@ void simulation() {
   gRandom->SetSeed();
 
   // Creating TFile
-  std::unique_ptr<TFile> file(new TFile("simulations.root", "RECREATE"));
+  std::unique_ptr<TFile> file(new TFile("/home/chiara/lab_2/main/simulations.root", "RECREATE"));
 
   // Define particle types and their properties
   Particle::AddParticleType("Pion+", 0.13957, 1, 0.);
@@ -101,8 +100,8 @@ void simulation() {
 
     // Loop over particles in each event
     for (int j = 0; j < Particles; ++j) {
-      phi = gRandom->Uniform(1 / (2 * TMath::Pi()));
-      theta = gRandom->Uniform(1 / TMath::Pi());
+      phi = gRandom->Uniform(2 * TMath::Pi());
+      theta = gRandom->Uniform(TMath::Pi());
       p = gRandom->Exp(1.);
       xRAND = gRandom->Rndm();
 
@@ -215,30 +214,31 @@ void simulation() {
   file->cd();
   file->Write();
   file->Close();
+  std::cout << "File 'simulations.root' scritto con successo." << std::endl;
 }
 
-void exitLog() {
-  std::cout << "exit by exit\n";
-  std::cout << boost::stacktrace::stacktrace();
-}
+// void exitLog() {
+//   std::cout << "exit by exit\n";
+//   std::cout << boost::stacktrace::stacktrace();
+// }
 
 // Add main in order to compile from SHELL
 int main() {
-  auto benchmark = TBenchmark();
-  benchmark.Start("Total");
-  std::atexit(exitLog);
+  // auto benchmark = TBenchmark();
+  // benchmark.Start("Total");
+  // std::atexit(exitLog);
 
   setStyle();
 
-  try {
-    simulation();
-  } catch (const std::exception &e) {
-    std::cout << e.what() << '\n';
-  } catch (...) {
-    std::cout << "Error occurred\n";
-  }
+  // try {
+  simulation();
+  // } catch (const std::exception &e) {
+  //   std::cout << e.what() << '\n';
+  // } catch (...) {
+  //   std::cout << "Error occurred\n";
+  // }
 
-  benchmark.Show("Total");
+  // benchmark.Show("Total");
 
   return EXIT_SUCCESS;
 }
